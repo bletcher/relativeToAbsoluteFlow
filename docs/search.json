@@ -5,5 +5,12 @@
     "title": "Relative to absolute flow",
     "section": "",
     "text": "1 Introduction"
+  },
+  {
+    "objectID": "simulation.html",
+    "href": "simulation.html",
+    "title": "2  Simulation",
+    "section": "",
+    "text": "Code\nlibrary(FAdist)\nlibrary(getPrepareWBData)\nlibrary(ggpubr)\nlibrary(tidyverse)\n\n\n\n\nCode\ngenerate_stream_flow &lt;- function(n, shape, scale) {\n  if (n &lt;= 0) stop(\"n must be a positive integer\")\n\n  stream_flow_values &lt;- rkappa(n = n, shape = shape, scale = scale)\n  ts(stream_flow_values)\n}\n\nn &lt;- 1000\n\nflowTS &lt;- generate_stream_flow(n = n, shape = 1.5, scale = 2)\nflowDF &lt;- data.frame(t = 1:n, flow = flowTS)\n# Convert time series data to a data frame for ggplot\necdfDF &lt;- data.frame(value = as.vector(flowTS))\n\n# Plot the ECDF using ggplot2\n# \ngFlow &lt;- ggplot(flowDF, aes(t, flow)) +\n  geom_line() +\n  theme_publication()\n# \ngECDF &lt;- ggplot(ecdfDF, aes(x = value)) +\n  stat_ecdf(geom = \"step\") +\n  labs(title = \"Cumulative Empirical Distribution of Stream Flow\",\n       x = \"Stream Flow Value\",\n       y = \"ECDF\") +\n  theme_publication()\n\nggarrange(gFlow, gECDF)"
   }
 ]

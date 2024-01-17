@@ -41,19 +41,6 @@ gECDF <- ggplot(ecdfDF, aes(x = value)) +
   theme_publication()
 
 ggarrange(gFlow, gECDF)
-```
 
-
-
-```{r}
-#| label: plotTS
-
-ggplot(flowD$timeSeries, aes(t, flow)) +
-  geom_line() +
-  theme_publication()
-
-ggplot(flowD$empCumulDist, aes(x, y)) +
-  geom_line() +
-  theme_publication()
 ```
 
