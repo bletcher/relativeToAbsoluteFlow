@@ -1,0 +1,59 @@
+# Simulation
+
+```{r}
+#| label: librariesSim
+
+library(FAdist)
+library(getPrepareWBData)
+library(ggpubr)
+library(tidyverse)
+```
+
+
+```{r}
+#| label: data 
+
+generate_stream_flow <- function(n, shape, scale) {
+  if (n <= 0) stop("n must be a positive integer")
+
+  stream_flow_values <- rkappa(n = n, shape = shape, scale = scale)
+  ts(stream_flow_values)
+}
+
+n <- 1000
+
+flowTS <- generate_stream_flow(n = n, shape = 1.5, scale = 2)
+flowDF <- data.frame(t = 1:n, flow = flowTS)
+# Convert time series data to a data frame for ggplot
+ecdfDF <- data.frame(value = as.vector(flowTS))
+
+# Plot the ECDF using ggplot2
+# 
+gFlow <- ggplot(flowDF, aes(t, flow)) +
+  geom_line() +
+  theme_publication()
+# 
+gECDF <- ggplot(ecdfDF, aes(x = value)) +
+  stat_ecdf(geom = "step") +
+  labs(title = "Cumulative Empirical Distribution of Stream Flow",
+       x = "Stream Flow Value",
+       y = "ECDF") +
+  theme_publication()
+
+ggarrange(gFlow, gECDF)
+```
+
+
+
+```{r}
+#| label: plotTS
+
+ggplot(flowD$timeSeries, aes(t, flow)) +
+  geom_line() +
+  theme_publication()
+
+ggplot(flowD$empCumulDist, aes(x, y)) +
+  geom_line() +
+  theme_publication()
+```
+
