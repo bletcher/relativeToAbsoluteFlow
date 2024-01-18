@@ -55,12 +55,36 @@ plotFlows <- function(params)
     ) +
     theme_publication()
   
-  ggarrange(gFlow, gECDF)
+  return(
+    list(
+      plots = ggarrange(gFlow, gECDF),
+      flow = flowDF,
+      ecdf = ecdfDF
+    )
+  )
 }
 ```
 
+### Explore params  
+Smaller shape = more extreme flows  
+Smaller scale = lower flows
 ```{r}
-#| label: plotFlows1 
+#| label: plotFlows1_1 
+
+params <- list(
+  n = 500,
+  shape = 1,
+  scale = 1,
+  logECDF = TRUE
+)
+
+d_1_1 <- plotFlows(params)
+d_1_1$plots
+```
+
+
+```{r}
+#| label: plotFlows15_2
 
 params <- list(
   n = 500,
@@ -69,11 +93,12 @@ params <- list(
   logECDF = TRUE
 )
 
-plotFlows(params)
+d_15_2 <- plotFlows(params)
+d_15_2$plots
 ```
 
 ```{r}
-#| label: plotFlows2 
+#| label: plotFlows25_1 
 
 params <- list(
   n = 500,
@@ -82,12 +107,13 @@ params <- list(
   logECDF = TRUE
 )
 
-plotFlows(params)
+d_25_1 <- plotFlows(params)
+d_25_1$plots
 ```
 
 
 ```{r}
-#| label: plotFlows3
+#| label: plotFlows5_05
 
 params <- list(
   n = 500,
@@ -96,5 +122,6 @@ params <- list(
   logECDF = TRUE
 )
 
-plotFlows(params)
+d_5_05 <- plotFlows(params)
+d_5_05$plots
 ```
