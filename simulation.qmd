@@ -158,7 +158,7 @@ Now we want to convert the x-axis values to actual (absolute) flow values. What 
 Start with one value from absolute flow.  
 ```{r}
 #| label: convertRelAbs
-
+ggarrange(gRelFlow, d_15_2$gECDF)
 ggarrange(gRelFlow, d_15_2$gECDF)
 
 flowSeq <- seq(0.01,0.99,0.025)
