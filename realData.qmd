@@ -30,8 +30,32 @@ ggplot(d |> filter(!is.na(flow_cfs_log10)), aes(flow_cfs_log10, rank_pred)) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
   geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
   geom_smooth(color = "darkgreen", se = FALSE) +
-  labs(x = "Predicted percentile", y = "Observed flow (log10(cfs)") +
+  labs(y = "Predicted percentile", x = "Observed flow (log10(cfs)") +
   theme_publication() +
   facet_wrap(~station_id, scales = "free")
 
 ```
+
+Pick sites that seem to have enough data to get predictions
+```{r}
+#| label: filterSites
+
+stationsToUse <- c(12, 29, 65, 80)
+
+d2 <- d |> 
+  filter(
+    !is.na(flow_cfs_log10), 
+    station_id %in% stationsToUse
+  )
+
+ggplot(d2, aes(flow_cfs_log10, rank_pred)) +
+  geom_point(aes(color = data_group), alpha = 0.025) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
+  geom_smooth(color = "darkgreen", se = FALSE) +
+  labs(y = "Predicted percentile", x = "Observed flow (log10(cfs)") +
+  theme_publication() +
+  facet_wrap(~station_id, scales = "free")
+
+```
+
