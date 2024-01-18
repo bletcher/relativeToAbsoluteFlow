@@ -9,38 +9,92 @@ library(ggpubr)
 library(tidyverse)
 ```
 
-
+Functions to generate and plot flow time series and empirical cumulative distribution plots using a 2-parameter kappa function
 ```{r}
-#| label: data 
+#| label: flowFunctions 
 
-generate_stream_flow <- function(n, shape, scale) {
+getStreamFlow <- function(n, shape, scale) {
   if (n <= 0) stop("n must be a positive integer")
 
   stream_flow_values <- rkappa(n = n, shape = shape, scale = scale)
   ts(stream_flow_values)
 }
 
-n <- 1000
 
-flowTS <- generate_stream_flow(n = n, shape = 1.5, scale = 2)
-flowDF <- data.frame(t = 1:n, flow = flowTS)
-# Convert time series data to a data frame for ggplot
-ecdfDF <- data.frame(value = as.vector(flowTS))
-
-# Plot the ECDF using ggplot2
-# 
-gFlow <- ggplot(flowDF, aes(t, flow)) +
-  geom_line() +
-  theme_publication()
-# 
-gECDF <- ggplot(ecdfDF, aes(x = value)) +
-  stat_ecdf(geom = "step") +
-  labs(title = "Cumulative Empirical Distribution of Stream Flow",
-       x = "Stream Flow Value",
-       y = "ECDF") +
-  theme_publication()
-
-ggarrange(gFlow, gECDF)
-
+plotFlows <- function(params)
+  #  nIn = 1000, shapeIn = 1.5, scaleIn = 2) 
+  {
+  flowTS <- getStreamFlow(params$n, params$shape, params$scale)
+  flowDF <- data.frame(t = 1:params$n, flow = flowTS)
+  
+  # Convert time series data to a data frame for ggplot
+  if(params$logECDF) {
+    ecdfDF <- data.frame(value = as.vector(log10(flowTS)))
+  } else {
+    ecdfDF <- data.frame(value = as.vector(flowTS))
+  }
+  # Plot the ECDF using ggplot2
+  # 
+  gFlow <- ggplot(flowDF, aes(t, flow)) +
+    geom_line() +
+    labs(
+      x = "Time", 
+      y = "Steam flow"
+    ) +
+    theme_publication()
+  # 
+  gECDF <- ggplot(ecdfDF, aes(x = value)) +
+    stat_ecdf(geom = "step") +
+    labs(
+      x = "Stream flow",
+      y = "ECDF"
+    ) +
+    geom_text(
+      aes(x = min(ecdfDF) + (max(ecdfDF) - min(ecdfDF)) * 0.25, y = 0.95), 
+      label = paste0("shape = ", params$shape, ", scale = ", params$scale)
+    ) +
+    theme_publication()
+  
+  ggarrange(gFlow, gECDF)
+}
 ```
 
+```{r}
+#| label: plotFlows1 
+
+params <- list(
+  n = 500,
+  shape = 1.5,
+  scale = 2,
+  logECDF = TRUE
+)
+
+plotFlows(params)
+```
+
+```{r}
+#| label: plotFlows2 
+
+params <- list(
+  n = 500,
+  shape = 2.5,
+  scale = 1,
+  logECDF = TRUE
+)
+
+plotFlows(params)
+```
+
+
+```{r}
+#| label: plotFlows3
+
+params <- list(
+  n = 500,
+  shape = 5,
+  scale = .5,
+  logECDF = TRUE
+)
+
+plotFlows(params)
+```
