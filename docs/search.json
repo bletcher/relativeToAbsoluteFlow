@@ -7,10 +7,17 @@
     "text": "1 Introduction"
   },
   {
-    "objectID": "simulation.html",
-    "href": "simulation.html",
+    "objectID": "simulation.html#explore-params",
+    "href": "simulation.html#explore-params",
     "title": "2  Simulation",
-    "section": "",
-    "text": "Code\nlibrary(FAdist)\nlibrary(getPrepareWBData)\nlibrary(ggpubr)\nlibrary(tidyverse)\n\n\nFunctions to generate and plot flow time series and empirical cumulative distribution plots using a 2-parameter kappa function\n\n\nCode\ngetStreamFlow &lt;- function(n, shape, scale) {\n  if (n &lt;= 0) stop(\"n must be a positive integer\")\n\n  stream_flow_values &lt;- rkappa(n = n, shape = shape, scale = scale)\n  ts(stream_flow_values)\n}\n\n\nplotFlows &lt;- function(params)\n  #  nIn = 1000, shapeIn = 1.5, scaleIn = 2) \n  {\n  flowTS &lt;- getStreamFlow(params$n, params$shape, params$scale)\n  flowDF &lt;- data.frame(t = 1:params$n, flow = flowTS)\n  \n  # Convert time series data to a data frame for ggplot\n  if(params$logECDF) {\n    ecdfDF &lt;- data.frame(value = as.vector(log10(flowTS)))\n  } else {\n    ecdfDF &lt;- data.frame(value = as.vector(flowTS))\n  }\n  # Plot the ECDF using ggplot2\n  # \n  gFlow &lt;- ggplot(flowDF, aes(t, flow)) +\n    geom_line() +\n    labs(\n      x = \"Time\", \n      y = \"Steam flow\"\n    ) +\n    theme_publication()\n  # \n  gECDF &lt;- ggplot(ecdfDF, aes(x = value)) +\n    stat_ecdf(geom = \"step\") +\n    labs(\n      x = \"Stream flow\",\n      y = \"ECDF\"\n    ) +\n    geom_text(\n      aes(x = min(ecdfDF) + (max(ecdfDF) - min(ecdfDF)) * 0.25, y = 0.95), \n      label = paste0(\"shape = \", params$shape, \", scale = \", params$scale)\n    ) +\n    theme_publication()\n  \n  return(\n    list(\n      plots = ggarrange(gFlow, gECDF),\n      flow = flowDF,\n      ecdf = ecdfDF\n    )\n  )\n}\n\n\n\n2.0.1 Explore params\nSmaller shape = more extreme flows\nSmaller scale = lower flows\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_1_1 &lt;- plotFlows(params)\nd_1_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1.5,\n  scale = 2,\n  logECDF = TRUE\n)\n\nd_15_2 &lt;- plotFlows(params)\nd_15_2$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 2.5,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_25_1 &lt;- plotFlows(params)\nd_25_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 5,\n  scale = .5,\n  logECDF = TRUE\n)\n\nd_5_05 &lt;- plotFlows(params)\nd_5_05$plots"
+    "section": "2.1 Explore params",
+    "text": "2.1 Explore params\nSmaller shape = more extreme flows\nSmaller scale = lower flows\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_1_1 &lt;- plotFlows(params)\nd_1_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1.5,\n  scale = 2,\n  logECDF = TRUE\n)\n\nd_15_2 &lt;- plotFlows(params)\nd_15_2$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 2.5,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_25_1 &lt;- plotFlows(params)\nd_25_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 5,\n  scale = .5,\n  logECDF = TRUE\n)\n\nd_5_05 &lt;- plotFlows(params)\nd_5_05$plots"
+  },
+  {
+    "objectID": "simulation.html#two-distributions",
+    "href": "simulation.html#two-distributions",
+    "title": "2  Simulation",
+    "section": "2.2 Two distributions",
+    "text": "2.2 Two distributions\nAssume the FPE scores follow the d_1_1 distribution. Generate df for ecdf and scale from 0-100.\nAssume we have absolute flow values as in d_15_2.\n\n\nCode\nfn_ecdf &lt;- ecdf(d_1_1$ecdf$value)\n\nrelFlow &lt;- data.frame(\n  value = d_1_1$ecdf$value, \n  ecdf = fn_ecdf(d_1_1$ecdf$value)\n  ) |&gt; \n  mutate(\n    value0_100 = (value - min(value)) / (max(value) - min(value))\n  )\n\ngRelFlow &lt;- ggplot(relFlow, aes(value0_100, ecdf)) +\n  geom_point() +\n  labs(x = \"Relative flow from FPE scores\") +\n  theme_publication()\n\n\nNow we want to convert the x-axis values to actual (absolute) flow values. What is the minimum number of absolute flow observations we need to do a good job transferring the FPE relative flow scores to absolute flow?\n\n\nCode\nggarrange(gRelFlow, d_15_2$plots)"
   }
 ]

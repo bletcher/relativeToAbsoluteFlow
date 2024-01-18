@@ -29,9 +29,9 @@ plotFlows <- function(params)
   
   # Convert time series data to a data frame for ggplot
   if(params$logECDF) {
-    ecdfDF <- data.frame(value = as.vector(log10(flowTS)))
+    ecdfDF <- data.frame(value = as.vector(log10(flowTS)), n = params$n, shape = params$shape, scale = params$scale)
   } else {
-    ecdfDF <- data.frame(value = as.vector(flowTS))
+    ecdfDF <- data.frame(value = as.vector(flowTS), n = params$n, shape = params$shape, scale = params$scale)
   }
   # Plot the ECDF using ggplot2
   # 
@@ -50,7 +50,7 @@ plotFlows <- function(params)
       y = "ECDF"
     ) +
     geom_text(
-      aes(x = min(ecdfDF) + (max(ecdfDF) - min(ecdfDF)) * 0.25, y = 0.95), 
+      aes(x = min(value) + (max(value) - min(value)) * 0.33, y = 0.95), 
       label = paste0("shape = ", params$shape, ", scale = ", params$scale)
     ) +
     theme_publication()
@@ -65,7 +65,7 @@ plotFlows <- function(params)
 }
 ```
 
-### Explore params  
+## Explore params  
 Smaller shape = more extreme flows  
 Smaller scale = lower flows
 ```{r}
@@ -125,3 +125,34 @@ params <- list(
 d_5_05 <- plotFlows(params)
 d_5_05$plots
 ```
+
+## Two distributions  
+Assume the FPE scores follow the d_1_1 distribution. Generate df for ecdf and scale from 0-100.  
+Assume we have absolute flow values as in d_15_2.   
+```{r}
+#| label: getECDF_FPE
+#| 
+fn_ecdf <- ecdf(d_1_1$ecdf$value)
+
+relFlow <- data.frame(
+  value = d_1_1$ecdf$value, 
+  ecdf = fn_ecdf(d_1_1$ecdf$value)
+  ) |> 
+  mutate(
+    value0_100 = (value - min(value)) / (max(value) - min(value))
+  )
+
+gRelFlow <- ggplot(relFlow, aes(value0_100, ecdf)) +
+  geom_point() +
+  labs(x = "Relative flow from FPE scores") +
+  theme_publication()
+
+```
+
+Now we want to convert the x-axis values to actual (absolute) flow values. What is the minimum number of absolute flow observations we need to do a good job transferring the FPE relative flow scores to absolute flow?  
+```{r}
+#| label: convertRelAbs
+
+ggarrange(gRelFlow, d_15_2$plots)
+```
+
