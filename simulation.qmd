@@ -57,6 +57,8 @@ plotFlows <- function(params)
   
   return(
     list(
+      gECDF = gECDF,
+      gFlow = gFlow,
       plots = ggarrange(gFlow, gECDF),
       flow = flowDF,
       ecdf = ecdfDF
@@ -142,17 +144,37 @@ relFlow <- data.frame(
     value0_100 = (value - min(value)) / (max(value) - min(value))
   )
 
+(
 gRelFlow <- ggplot(relFlow, aes(value0_100, ecdf)) +
   geom_point() +
   labs(x = "Relative flow from FPE scores") +
   theme_publication()
+)
 
 ```
 
 Now we want to convert the x-axis values to actual (absolute) flow values. What is the minimum number of absolute flow observations we need to do a good job transferring the FPE relative flow scores to absolute flow?  
+
+Start with one value from absolute flow.  
 ```{r}
 #| label: convertRelAbs
 
-ggarrange(gRelFlow, d_15_2$plots)
+ggarrange(gRelFlow, d_15_2$gECDF)
+
+flowSeq <- seq(0.01,0.99,0.025)
+map <- 
+  data.frame(
+    relFlow = flowSeq,
+    absFlow = log10(qkappa(flowSeq, 1.5, 2))
+  )
+
+ggplot(map, aes(relFlow, absFlow)) +
+  geom_point() +
+  geom_line()
+
+
+
+
+
 ```
 
