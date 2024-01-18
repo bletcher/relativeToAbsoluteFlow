@@ -18,7 +18,7 @@
     "href": "realData.html#plot-raw-data",
     "title": "2  Real data",
     "section": "2.2 Plot raw data",
-    "text": "2.2 Plot raw data\nLogistic is blue line and gam is green line. Grouped by site.\n\n\nCode\nggplot(d |&gt; filter(!is.na(flow_cfs_log10)), aes(flow_cfs_log10, rank_pred)) +\n  geom_point(aes(color = data_group), alpha = 0.025) +\n  guides(color = guide_legend(override.aes = list(alpha = 1))) +\n  geom_smooth(method = \"glm\", method.args= list(family=\"binomial\"), se = FALSE) +\n  geom_smooth(color = \"darkgreen\", se = FALSE) +\n  labs(x = \"Predicted percentile\", y = \"Observed flow (log10(cfs)\") +\n  theme_publication() +\n  facet_wrap(~station_id, scales = \"free\")"
+    "text": "2.2 Plot raw data\nLogistic is blue line and gam is green line. Regressions are across data_group. Grouped by site.\n\n\nCode\nggplot(d |&gt; filter(!is.na(flow_cfs_log10)), aes(flow_cfs_log10, rank_pred)) +\n  geom_point(aes(color = data_group), alpha = 0.025) +\n  guides(color = guide_legend(override.aes = list(alpha = 1))) +\n  geom_smooth(method = \"glm\", method.args= list(family=\"binomial\"), se = FALSE) +\n  geom_smooth(color = \"darkgreen\", se = FALSE) +\n  labs(x = \"Predicted percentile\", y = \"Observed flow (log10(cfs)\") +\n  theme_publication() +\n  facet_wrap(~station_id, scales = \"free\")"
   },
   {
     "objectID": "simulation.html#explore-params",

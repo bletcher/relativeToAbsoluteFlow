@@ -20,9 +20,10 @@ d <- read.csv('./data/in/concatenated_predictions.csv') |>
 ```
 
 ## Plot raw data  
-Logistic is blue line and gam is green line. Grouped by site.  
+Logistic is blue line and gam is green line. Regressions are across data_group. Grouped by site.  
 ```{r}
 #| label: plotRealData
+#| fig-height: 10
 
 ggplot(d |> filter(!is.na(flow_cfs_log10)), aes(flow_cfs_log10, rank_pred)) +
   geom_point(aes(color = data_group), alpha = 0.025) +
