@@ -7,17 +7,31 @@
     "text": "1 Introduction"
   },
   {
+    "objectID": "realData.html#get-data",
+    "href": "realData.html#get-data",
+    "title": "2  Real data",
+    "section": "2.1 Get data",
+    "text": "2.1 Get data\n\n\nCode\nd &lt;- read.csv('./data/in/concatenated_predictions.csv') |&gt; \n  mutate(flow_cfs_log10 = log10(flow_cfs))"
+  },
+  {
+    "objectID": "realData.html#plot-raw-data",
+    "href": "realData.html#plot-raw-data",
+    "title": "2  Real data",
+    "section": "2.2 Plot raw data",
+    "text": "2.2 Plot raw data\nLogistic is blue line and gam is green line. Grouped by site.\n\n\nCode\nggplot(d |&gt; filter(!is.na(flow_cfs_log10)), aes(flow_cfs_log10, rank_pred)) +\n  geom_point(aes(color = data_group), alpha = 0.025) +\n  guides(color = guide_legend(override.aes = list(alpha = 1))) +\n  geom_smooth(method = \"glm\", method.args= list(family=\"binomial\"), se = FALSE) +\n  geom_smooth(color = \"darkgreen\", se = FALSE) +\n  labs(x = \"Predicted percentile\", y = \"Observed flow (log10(cfs)\") +\n  theme_publication() +\n  facet_wrap(~station_id, scales = \"free\")"
+  },
+  {
     "objectID": "simulation.html#explore-params",
     "href": "simulation.html#explore-params",
-    "title": "2  Simulation",
-    "section": "2.1 Explore params",
-    "text": "2.1 Explore params\nSmaller shape = more extreme flows\nSmaller scale = lower flows\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_1_1 &lt;- plotFlows(params)\nd_1_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1.50,\n  scale = 2,\n  logECDF = TRUE\n)\n\nd_15_2 &lt;- plotFlows(params)\nd_15_2$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 2.5,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_25_1 &lt;- plotFlows(params)\nd_25_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 5,\n  scale = .5,\n  logECDF = TRUE\n)\n\nd_5_05 &lt;- plotFlows(params)\nd_5_05$plots"
+    "title": "3  Simulations",
+    "section": "3.1 Explore params",
+    "text": "3.1 Explore params\nSmaller shape = more extreme flows\nSmaller scale = lower flows\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_1_1 &lt;- plotFlows(params)\nd_1_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1.50,\n  scale = 2,\n  logECDF = TRUE\n)\n\nd_15_2 &lt;- plotFlows(params)\nd_15_2$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 2.5,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_25_1 &lt;- plotFlows(params)\nd_25_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 5,\n  scale = .5,\n  logECDF = TRUE\n)\n\nd_5_05 &lt;- plotFlows(params)\nd_5_05$plots"
   },
   {
     "objectID": "simulation.html#two-distributions",
     "href": "simulation.html#two-distributions",
-    "title": "2  Simulation",
-    "section": "2.2 Two distributions",
-    "text": "2.2 Two distributions\nAssume the FPE scores follow the d_1_1 distribution. Generate df for ecdf and scale from 0-100.\nAssume we have absolute flow values as in d_15_2.\n\n\nCode\nfn_ecdf &lt;- ecdf(d_1_1$ecdf$value)\n\nrelFlow &lt;- data.frame(\n  value = d_1_1$ecdf$value, \n  ecdf = fn_ecdf(d_1_1$ecdf$value)\n  ) |&gt; \n  mutate(\n    value0_100 = (value - min(value)) / (max(value) - min(value))\n  )\n\n(\ngRelFlow &lt;- ggplot(relFlow, aes(value0_100, ecdf)) +\n  geom_point() +\n  labs(x = \"Relative flow from FPE scores\") +\n  theme_publication()\n)\n\n\n\n\n\nNow we want to convert the x-axis values to actual (absolute) flow values. What is the minimum number of absolute flow observations we need to do a good job transferring the FPE relative flow scores to absolute flow?\nStart with one value from absolute flow.\n\n\nCode\nggarrange(gRelFlow, d_15_2$gECDF)\n\n\n\n\n\nCode\nggarrange(gRelFlow, d_15_2$gECDF)\n\n\n\n\n\nCode\nflowSeq &lt;- seq(0.01,0.99,0.025)\nmap &lt;- \n  data.frame(\n    relFlow = flowSeq,\n    absFlow = log10(qkappa(flowSeq, 1.5, 2))\n  )\n\nggplot(map, aes(relFlow, absFlow)) +\n  geom_point() +\n  geom_line()"
+    "title": "3  Simulations",
+    "section": "3.2 Two distributions",
+    "text": "3.2 Two distributions\nAssume the FPE scores follow the d_1_1 distribution. Generate df for ecdf and scale from 0-100.\nAssume we have absolute flow values as in d_15_2.\n\n\nCode\nfn_ecdf &lt;- ecdf(d_1_1$ecdf$value)\n\nrelFlow &lt;- data.frame(\n  value = d_1_1$ecdf$value, \n  ecdf = fn_ecdf(d_1_1$ecdf$value)\n  ) |&gt; \n  mutate(\n    value0_100 = (value - min(value)) / (max(value) - min(value))\n  )\n\n(\ngRelFlow &lt;- ggplot(relFlow, aes(value0_100, ecdf)) +\n  geom_point() +\n  labs(x = \"Relative flow from FPE scores\") +\n  theme_publication()\n)\n\n\n\n\n\nNow we want to convert the x-axis values to actual (absolute) flow values. What is the minimum number of absolute flow observations we need to do a good job transferring the FPE relative flow scores to absolute flow?\nStart with one value from absolute flow.\n\n\nCode\nggarrange(gRelFlow, d_15_2$gECDF)\n\n\n\n\n\nCode\nflowSeq &lt;- seq(0.01,0.99,0.025)\nmap &lt;- \n  data.frame(\n    relFlow = flowSeq,\n    absFlow = log10(qkappa(flowSeq, 1.5, 2))\n  )\n\nggplot(map, aes(relFlow, absFlow)) +\n  geom_point() +\n  geom_line()"
   }
 ]

@@ -1,0 +1,36 @@
+
+```{r}
+#| label: librariesSim
+
+library(FAdist)
+library(getPrepareWBData)
+library(ggpubr)
+library(tidyverse)
+```
+
+
+# Real data  
+## Get data
+```{r}
+#| label: getRealData
+
+d <- read.csv('./data/in/concatenated_predictions.csv') |> 
+  mutate(flow_cfs_log10 = log10(flow_cfs))
+
+```
+
+## Plot raw data  
+Logistic is blue line and gam is green line. Grouped by site.  
+```{r}
+#| label: plotRealData
+
+ggplot(d |> filter(!is.na(flow_cfs_log10)), aes(flow_cfs_log10, rank_pred)) +
+  geom_point(aes(color = data_group), alpha = 0.025) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
+  geom_smooth(color = "darkgreen", se = FALSE) +
+  labs(x = "Predicted percentile", y = "Observed flow (log10(cfs)") +
+  theme_publication() +
+  facet_wrap(~station_id, scales = "free")
+
+```
