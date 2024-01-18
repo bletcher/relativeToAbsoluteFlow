@@ -90,7 +90,7 @@ d_1_1$plots
 
 params <- list(
   n = 500,
-  shape = 1.5,
+  shape = 1.50,
   scale = 2,
   logECDF = TRUE
 )

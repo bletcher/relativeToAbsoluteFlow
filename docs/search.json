@@ -11,7 +11,7 @@
     "href": "simulation.html#explore-params",
     "title": "2  Simulation",
     "section": "2.1 Explore params",
-    "text": "2.1 Explore params\nSmaller shape = more extreme flows\nSmaller scale = lower flows\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_1_1 &lt;- plotFlows(params)\nd_1_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1.5,\n  scale = 2,\n  logECDF = TRUE\n)\n\nd_15_2 &lt;- plotFlows(params)\nd_15_2$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 2.5,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_25_1 &lt;- plotFlows(params)\nd_25_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 5,\n  scale = .5,\n  logECDF = TRUE\n)\n\nd_5_05 &lt;- plotFlows(params)\nd_5_05$plots"
+    "text": "2.1 Explore params\nSmaller shape = more extreme flows\nSmaller scale = lower flows\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_1_1 &lt;- plotFlows(params)\nd_1_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 1.50,\n  scale = 2,\n  logECDF = TRUE\n)\n\nd_15_2 &lt;- plotFlows(params)\nd_15_2$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 2.5,\n  scale = 1,\n  logECDF = TRUE\n)\n\nd_25_1 &lt;- plotFlows(params)\nd_25_1$plots\n\n\n\n\n\n\n\nCode\nparams &lt;- list(\n  n = 500,\n  shape = 5,\n  scale = .5,\n  logECDF = TRUE\n)\n\nd_5_05 &lt;- plotFlows(params)\nd_5_05$plots"
   },
   {
     "objectID": "simulation.html#two-distributions",
