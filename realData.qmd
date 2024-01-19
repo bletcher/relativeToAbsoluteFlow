@@ -84,7 +84,7 @@ ggplot(dWB0, aes(scale(flow_cfs_log10), scale(score))) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
  # geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
   geom_smooth(color = "darkgreen", se = FALSE) +
-  labs(x = "Observed flow (log10(cfs)", y = "Score") +
+  labs(x = "Observed flow (log10(cfs), scaled", y = "Score, scaled") +
   theme_publication()
 
 ggplot(dWB0, aes(rank_obs, rank_pred)) +
@@ -92,7 +92,7 @@ ggplot(dWB0, aes(rank_obs, rank_pred)) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
  # geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
   geom_smooth(color = "darkgreen", se = FALSE) +
-  labs(x = "Observed flow (log10(cfs)", y = "Score") +
+  labs(x = "Ranked flow", y = "Ranked score") +
   theme_publication()
 
 ggplot(dWB0, aes(flow_cfs_log10, score)) +
@@ -112,7 +112,7 @@ ggplot(dWB0, aes(rank_pred, score)) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
  # geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
   geom_smooth(color = "darkgreen", se = FALSE) +
-  labs(x = "Predicted percentile", y = "Score") +
+  labs(x = "Ranked score", y = "Score") +
   theme_publication() 
 #  facet_wrap(~data_group)
 ```
