@@ -49,7 +49,7 @@ d2 <- d |>
   )
 
 ggplot(d2, aes(flow_cfs_log10, rank_pred)) +
-  geom_point(aes(color = data_group), alpha = 0.025) +
+  geom_point(aes(color = data_group), alpha = 0.1) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
   geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
   geom_smooth(color = "darkgreen", se = FALSE) +
@@ -57,9 +57,25 @@ ggplot(d2, aes(flow_cfs_log10, rank_pred)) +
   theme_publication() +
   facet_wrap(~station_name, scales = "free")
 
+ggplot(d2, aes(scale(flow_cfs_log10), scale(score))) +
+  geom_point(aes(color = data_group), alpha = 0.1) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+ # geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
+  geom_smooth(color = "darkgreen", se = FALSE) +
+  labs(y = "Score, scaled", x = "Observed flow (log10(cfs), scaled") +
+  theme_publication() +
+  facet_wrap(~station_name, scales = "free")
+
+```
+### West Brook 0
+```{r}
+#| label: WB0
+
+
 ```
 
-## Plot ECDFs  
+
+## Plot Scores/ranks  
 Focus on West Brook 0
 
 ```{r}
@@ -69,17 +85,24 @@ dWB0 <- d |>
   filter(
     !is.na(flow_cfs_log10), 
     station_name %in% "West Brook 0_01171100"
+  ) |> 
+  mutate(
+   flow_cfs_log10_scaled = scale(flow_cfs_log10), 
+   score_scaled = scale(score)
   )
 
-ggplot(dWB0, aes(flow_cfs_log10, score)) +
+
+#ojs_define(dWB0_OJS = transpose(dWB0))
+
+ggplot(dWB0, aes(flow_cfs_log10_scaled, score_scaled)) +
   geom_point(aes(color = data_group), alpha = 0.1) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
-  geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
+  #geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
   geom_smooth(color = "darkgreen", se = FALSE) +
   labs(x = "Observed flow (log10(cfs)", y = "Score") +
   theme_publication()
 
-ggplot(dWB0, aes(scale(flow_cfs_log10), scale(score))) +
+ggplot(dWB0, aes(flow_cfs_log10_scaled, score_scaled)) +
   geom_point(aes(color = data_group), alpha = 0.1) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
  # geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
@@ -117,15 +140,55 @@ ggplot(dWB0, aes(rank_pred, score)) +
 #  facet_wrap(~data_group)
 ```
 
-```{r}
-#####
-fn_ecdf_WB0 <- ecdf(dWB0$score)
+## Plot ECDF
 
+```{r}
+#| label: scoreECDF
+
+
+fn_ecdf_WB0 <- ecdf(dWB0$score)
 plot(fn_ecdf_WB0)
 
 ggplot(dWB0, aes(score)) + 
   stat_ecdf(geom = "step") +
-  stat_ecdf(aes(flow_cfs), color = "blue")
+  theme_publication()
+  #stat_ecdf(aes(flow_cfs), color = "blue")
+
+ggplot(dWB0, aes(score_scaled)) + 
+  stat_ecdf(geom = "step") +
+  stat_ecdf(aes(flow_cfs_log10_scaled), color = "blue") +
+  theme_publication() 
+
+```
+
+### Subsample flow data
+
+```{r}
+#| label: subsampleFlow
+
+fn_ecdf_flow <- ecdf(dWB0$flow_cfs_log10_scaled)
+dWB0$flow_cfs_log10_scaled_ecdf = fn_ecdf_flow(dWB0$flow_cfs_log10_scaled)
+
+plotSubSample <- function(dIn, numSample){
+  #numSample <- 10
+  dInSample <- sample_n(dIn, numSample)
+
+  ggplot(dIn, aes(score_scaled)) + 
+    stat_ecdf(geom = "step") +
+    stat_ecdf(aes(flow_cfs_log10_scaled), color = "blue") +
+    geom_point(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "orange", size = 4, data = dInSample) +
+    #stat_ecdf(aes(flowScaled), color = "orange", data = flowSample) +
+    #stat_ecdf(aes(flow_cfs_log10_scaled), color = "orange", geom = "point", size = 3, data = flowSample) +
+    #stat_ecdf(aes(flow_cfs_log10_scaled), color = "orange", geom = "smooth", data = flowSample) +
+    labs(x = "Scaled value, blue = flow, black = image score", y = "Empirical cumulative distribution") +
+    theme_publication() 
+}
+
+plotSubSample(dWB0, 10)
+plotSubSample(dWB0, 5)
+plotSubSample(dWB0, 5)
+
+
 
 
 
