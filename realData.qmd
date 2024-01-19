@@ -14,9 +14,32 @@ library(tidyverse)
 ```{r}
 #| label: getRealData
 
+getECDF <- function(d) {
+  fn <- ecdf(d)
+  fn(d)
+}
+
 d <- read.csv('./data/in/concatenated_predictions.csv') |> 
   mutate(flow_cfs_log10 = log10(flow_cfs))
 
+#Get ECDF for each station
+#
+dG <- d |> 
+  filter(!is.na(flow_cfs_log10)) |> 
+  group_by(station_name) |> 
+  mutate(
+    flow_cfs_log10_ecdf = getECDF(flow_cfs_log10),
+    
+    flow_cfs_log10_scaled = scale(flow_cfs_log10), 
+    score_scaled = scale(score),
+    flow_cfs_log10_scaled_ecdf = getECDF(flow_cfs_log10_scaled),
+    score_scaled_ecdf = getECDF(score_scaled)
+  ) |> 
+  ungroup()
+
+  
+d <- d |> 
+  left_join(dG)
 ```
 
 ## Plot raw data  
@@ -67,17 +90,32 @@ ggplot(d2, aes(scale(flow_cfs_log10), scale(score))) +
   facet_wrap(~station_name, scales = "free")
 
 ```
-### West Brook 0
+
+## Plot ECDF  
+Fair amount of variation among stations
 ```{r}
-#| label: WB0
+#| label: plotECDFs
+
+ggplot(d, aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf)) +
+  geom_line(aes(color = station_name)) +
+  geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE, color = "black") +
+  xlim(c(-3.5,3.5)) +
+  theme_publication()
+
+ggplot(d |> filter(!is.na(flow_cfs_log10_scaled)), aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf)) +
+  geom_line(aes(color = station_name)) +
+  #geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE, color = "black") +
+  xlim(c(-3.5,3.5)) +
+  guides(color = guide_legend(override.aes = list(alpha = 1))) +
+  theme_publication() +
+  facet_wrap(~station_name)
 
 
 ```
 
 
-## Plot Scores/ranks  
-Focus on West Brook 0
-
+## Plot Scores/ranks
+### West Brook 0
 ```{r}
 #| label: plotECDF
 
@@ -166,8 +204,9 @@ ggplot(dWB0, aes(score_scaled)) +
 ```{r}
 #| label: subsampleFlow
 
-fn_ecdf_flow <- ecdf(dWB0$flow_cfs_log10_scaled)
-dWB0$flow_cfs_log10_scaled_ecdf = fn_ecdf_flow(dWB0$flow_cfs_log10_scaled)
+
+dWB0$flow_cfs_log10_scaled_ecdf = getECDF(dWB0$flow_cfs_log10_scaled)
+
 
 plotSubSample <- function(dIn, numSample){
   #numSample <- 10
@@ -188,7 +227,8 @@ plotSubSample(dWB0, 10)
 plotSubSample(dWB0, 5)
 plotSubSample(dWB0, 5)
 
-
+hist(dWB0$flow_cfs_log10)
+hist(dWB0$flow_cfs)
 
 
 
