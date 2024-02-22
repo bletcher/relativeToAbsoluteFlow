@@ -1,23 +1,75 @@
 
 ```{r}
-#| label: librariesSim
+#| label: libraries_real
 
 library(FAdist)
+library(fitdistrplus)
 library(getPrepareWBData)
 library(ggpubr)
+library(moments)
+library(lmomco)
+library(MASS)
 library(tidyverse)
 ```
 
 
-# Real data  
-## Get data
+# Real data 
+## Functions
 ```{r}
-#| label: getRealData
+#| label: functions
+
 
 getECDF <- function(d) {
   fn <- ecdf(d)
   fn(d)
 }
+
+estimate_kappa_params <- function(data) {
+  mu <- mean(data, na.rm = TRUE)
+  sigma <- sd(data, na.rm = TRUE)
+  skewness <- skewness(data, na.rm = TRUE)
+  kurtosis <- kurtosis(data, na.rm = TRUE)
+  
+  kappa_params <- c(mu, sigma, skewness, kurtosis)
+  #kappa_params <- c(skewness, kurtosis, sigma, mu)
+  
+  return(kappa_params)
+}
+
+# Function to standardize data using the 4-parameter kappa distribution without ECDF
+standardize_data_kappa <- function(data) {
+  kappa_params <- estimate_kappa_params(data)
+  standardized_values <- pkappa4(data, kappa_params[1], kappa_params[2],
+                                       kappa_params[3], kappa_params[4])
+  
+  return(standardized_values)
+}
+
+
+
+
+#fitdistr(dWB0$flow_cfs_log10, "kappa4")
+
+
+pkappa4_ben <- function (q, shape1, shape2, scale = 1, location = 0, lower.tail = TRUE, log.p = FALSE) {
+    Fx <- (1 - shape2 * (1 - shape1/scale * (q - location))^(1/shape1))^(1/shape2)
+    if (!lower.tail) 
+        Fx <- 1 - Fx
+    if (log.p) 
+        Fx <- log(Fx)
+    return(Fx)
+}
+
+
+
+
+```
+
+
+## Get data
+```{r}
+#| label: getRealData
+
 
 d <- read.csv('./data/in/concatenated_predictions.csv') |> 
   mutate(flow_cfs_log10 = log10(flow_cfs))
@@ -29,17 +81,51 @@ dG <- d |>
   group_by(station_name) |> 
   mutate(
     flow_cfs_log10_ecdf = getECDF(flow_cfs_log10),
-    
+  
     flow_cfs_log10_scaled = scale(flow_cfs_log10), 
-    score_scaled = scale(score),
     flow_cfs_log10_scaled_ecdf = getECDF(flow_cfs_log10_scaled),
-    score_scaled_ecdf = getECDF(score_scaled)
+    
+    #flow_cfs_log10_scaled_kappa = standardize_data_kappa(flow_cfs_log10), 
+    #flow_cfs_log10_scaled_kappa_ecdf = getECDF(flow_cfs_log10_scaled_kappa),
+    
+    score_scaled = scale(score),
+    score_scaled_ecdf = getECDF(score_scaled),
+    
+    score_scaled_kappa = standardize_data_kappa(score)
+   # score_scaled_kappa_ecdf = getECDF(score_scaled_kappa)
   ) |> 
   ungroup()
+
+
+# tmp=d |> 
+#   filter(!is.na(flow_cfs_log10), station_name == "01359135_Patroon Creek") |> 
+#   group_by(station_name) |> 
+#   mutate(
+#     flow_cfs_log10_ecdf = getECDF(flow_cfs_log10),
+#   
+#     flow_cfs_log10_scaled = scale(flow_cfs_log10), 
+#     flow_cfs_log10_scaled_ecdf = getECDF(flow_cfs_log10_scaled),
+#     
+#     flow_cfs_log10_scaled_kappa = scale_kappa(flow_cfs_log10), 
+#    # flow_cfs_log10_scaled_kappa_ecdf = getECDF(flow_cfs_log10_scaled_kappa),
+#     
+#     score_scaled = scale(score),
+#     score_scaled_ecdf = getECDF(score_scaled),
+#     
+#     score_scaled_kappa = scale_kappa(score),
+#     score_scaled_kappa_ecdf = getECDF(score_scaled_kappa)
+#   ) |> 
+#   ungroup()
 
   
 d <- d |> 
   left_join(dG)
+
+dWB0 <- d |> 
+  filter(
+    !is.na(flow_cfs_log10), 
+    station_name %in% "West Brook 0_01171100"
+  )
 ```
 
 ## Plot raw data  
@@ -51,8 +137,8 @@ Logistic is blue line and gam is green line. Regressions are across data_group. 
 ggplot(d |> filter(!is.na(flow_cfs_log10)), aes(flow_cfs_log10, rank_pred)) +
   geom_point(aes(color = data_group), alpha = 0.025) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
-  geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
-  geom_smooth(color = "darkgreen", se = FALSE) +
+  #geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
+  #geom_smooth(color = "darkgreen", se = FALSE) +
   labs(y = "Predicted percentile", x = "Observed flow (log10(cfs)") +
   theme_publication() +
   facet_wrap(~station_name, scales = "free")
@@ -113,21 +199,67 @@ ggplot(d |> filter(!is.na(flow_cfs_log10_scaled)), aes(flow_cfs_log10_scaled, fl
 
 ```
 
+## Plot ECDF kappa 
+Fair amount of variation among stations
+```{r}
+#| label: plotECDF_kappas
+dummy=0
+# ggplot(d, aes(flow_cfs_log10_scaled_kappa, flow_cfs_log10_scaled_kappa_ecdf)) +
+#   geom_line(aes(color = station_name)) +
+#   geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE, color = "black") +
+#   xlim(c(-3.5,3.5)) +
+#   theme_publication()
+# 
+# ggplot(d |> filter(!is.na(flow_cfs_log10_scaled_kappa)), aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_kappa_ecdf)) +
+#   geom_line(aes(color = station_name)) +
+#   #geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE, color = "black") +
+#   xlim(c(-3.5,3.5)) +
+#   guides(color = guide_legend(override.aes = list(alpha = 1))) +
+#   theme_publication() +
+#   facet_wrap(~station_name)
+
+
+```
+
+
 
 ## Plot Scores/ranks
 ### West Brook 0
 ```{r}
-#| label: plotECDF
+#| label: plotECDFWB0
 
-dWB0 <- d |> 
-  filter(
-    !is.na(flow_cfs_log10), 
-    station_name %in% "West Brook 0_01171100"
-  ) |> 
-  mutate(
-   flow_cfs_log10_scaled = scale(flow_cfs_log10), 
-   score_scaled = scale(score)
+kappas <- estimate_kappa_params(dWB0$flow_cfs_log10)
+# [1] -0.7751903  3.1289847  0.7443434  0.8989118
+flow_kappa <- data.frame(
+  flow = dWB0$flow_cfs_log10,
+  x = pkappa4(
+    dWB0$flow_cfs_log10,
+    kappas[3],
+    kappas[4],
+    kappas[2],
+    kappas[1]
   )
+)
+
+
+ggplot(flow_kappa, aes(flow)) +
+  geom_histogram() + 
+  geom_histogram(aes(x), color = "orange")
+
+hist(dWB0$flow_cfs_log10)
+#curve(dkappa4(dWB0$flow_cfs_log10, kappas[3], kappas[4],kappas[2],kappas[1]), add=TRUE, col='red4', lwd=2)
+
+
+
+
+x<-rkappa4(1000,1,.2,12,10) 
+hist(x,freq=FALSE,col='gray',border='white') 
+curve(dkappa4(x,.1,.2,12,110),add=TRUE,col='red4',lwd=2)
+
+#https://rdrr.io/cran/lmomco/man/parkap.html
+lmr <- lmoms(dWB0$flow_cfs_log10)
+parkap(lmr)
+
 
 
 #ojs_define(dWB0_OJS = transpose(dWB0))
@@ -137,7 +269,7 @@ ggplot(dWB0, aes(flow_cfs_log10_scaled, score_scaled)) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
   #geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
   geom_smooth(color = "darkgreen", se = FALSE) +
-  labs(x = "Observed flow (log10(cfs)", y = "Score") +
+  labs(x = "Observed flow (log10(cfs))", y = "Score") +
   theme_publication()
 
 ggplot(dWB0, aes(flow_cfs_log10_scaled, score_scaled)) +
@@ -145,7 +277,7 @@ ggplot(dWB0, aes(flow_cfs_log10_scaled, score_scaled)) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
  # geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
   geom_smooth(color = "darkgreen", se = FALSE) +
-  labs(x = "Observed flow (log10(cfs), scaled", y = "Score, scaled") +
+  labs(x = "Observed flow (log10(cfs)), scaled", y = "Score, scaled") +
   theme_publication()
 
 ggplot(dWB0, aes(rank_obs, rank_pred)) +
@@ -161,7 +293,7 @@ ggplot(dWB0, aes(flow_cfs_log10, score)) +
   guides(color = guide_legend(override.aes = list(alpha = 1))) +
   #geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE) +
   geom_smooth(color = "darkgreen", se = FALSE) +
-  labs(x = "Observed flow (log10(cfs)", y = "score") +
+  labs(x = "Observed flow (log10(cfs))", y = "score") +
   theme_publication() +
   facet_wrap(~data_group)
 
@@ -199,33 +331,93 @@ ggplot(dWB0, aes(score_scaled)) +
 
 ```
 
+## Plot ECDF reverse scales 
+
+```{r}
+#| label: plotECDFs_reverseScales
+
+ggplot(d, aes(flow_cfs_log10_scaled_ecdf, flow_cfs_log10_scaled)) +
+  geom_line(aes(color = station_name)) +
+ # geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE, color = "black") +
+  ylim(c(-3.5,3.5)) +
+  theme_publication()
+
+ggplot(dWB0, aes(flow_cfs_log10_scaled_ecdf, flow_cfs_log10_scaled)) +
+  geom_line(color = "red") +
+  geom_line(aes(score_scaled_ecdf, score_scaled), color = "blue") +
+ # geom_smooth(method = "glm", method.args= list(family="binomial"), se = FALSE, color = "black") +
+  ylim(c(-3.5,3.5)) +
+  theme_publication()
+
+```
+
+
 ### Subsample flow data
 
 ```{r}
 #| label: subsampleFlow
 
 
-dWB0$flow_cfs_log10_scaled_ecdf = getECDF(dWB0$flow_cfs_log10_scaled)
+#dWB0$flow_cfs_log10_scaled_ecdf = getECDF(dWB0$flow_cfs_log10_scaled)
 
 
-plotSubSample <- function(dIn, numSample){
-  #numSample <- 10
-  dInSample <- sample_n(dIn, numSample)
+plotSubSample <- function(dIn0, numSample, add_anchors = TRUE){
 
-  ggplot(dIn, aes(score_scaled)) + 
-    stat_ecdf(geom = "step") +
-    stat_ecdf(aes(flow_cfs_log10_scaled), color = "blue") +
+   dIn <- dIn0 |> 
+     dplyr::select(
+      flow_cfs_log10_scaled, 
+      flow_cfs_log10_scaled_ecdf,
+      score_scaled, 
+      score_scaled_ecdf
+    )
+  
+  dInSample <- sample_n(dIn, numSample) 
+  
+  # add in min and max flow samples for anchors
+  if(add_anchors){
+    dInSample <- rbind(
+      dInSample, 
+      dIn |> filter(flow_cfs_log10_scaled == max(flow_cfs_log10_scaled)) |> filter(score_scaled == max(score_scaled)),
+      dIn |> filter(flow_cfs_log10_scaled == min(flow_cfs_log10_scaled)) |> filter(score_scaled == min(score_scaled))
+    )
+  }
+  
+  
+  dInSampleApprox <- data.frame(approx(dIn$score_scaled, dIn$score_scaled_ecdf, dInSample$score_scaled))
+  
+  ggplot(dIn, aes(score_scaled, score_scaled_ecdf)) + 
+    #stat_ecdf(geom = "step") +
+    #stat_ecdf(aes(flow_cfs_log10_scaled), color = "blue") +
+    geom_line() +
+    geom_line(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "blue") +
     geom_point(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "orange", size = 4, data = dInSample) +
+    #geom_point(aes(x,y), data = dInSampleApprox) +
     #stat_ecdf(aes(flowScaled), color = "orange", data = flowSample) +
     #stat_ecdf(aes(flow_cfs_log10_scaled), color = "orange", geom = "point", size = 3, data = flowSample) +
     #stat_ecdf(aes(flow_cfs_log10_scaled), color = "orange", geom = "smooth", data = flowSample) +
-    labs(x = "Scaled value, blue = flow, black = image score", y = "Empirical cumulative distribution") +
+    geom_smooth(
+      aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf),
+      method = "glm", method.args= list(family="binomial"), se = FALSE, color = "orange",
+      data = dInSample
+      ) +
+    geom_smooth(
+      aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf),
+      se = FALSE, color = "orange", linetype = "dashed",
+      data = dInSample
+      ) +
+    labs(x = "Scaled values, blue = Observed flow, black = image score, orange = subsampled flow", y = "Empirical cumulative distribution") +
     theme_publication() 
 }
 
+plotSubSample(dWB0, 100)
+plotSubSample(dWB0, 100, FALSE)
+
 plotSubSample(dWB0, 10)
-plotSubSample(dWB0, 5)
-plotSubSample(dWB0, 5)
+plotSubSample(dWB0, 10, FALSE)
+
+plotSubSample(dWB0, 1)
+plotSubSample(dWB0, 1, FALSE)
+
 
 hist(dWB0$flow_cfs_log10)
 hist(dWB0$flow_cfs)
@@ -251,4 +443,3 @@ ggplot(relFlow_WB0, aes(value0_100, ecdf)) +
   theme_publication()
 
 ```
-

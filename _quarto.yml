@@ -18,7 +18,7 @@ book:
   chapters:
     - index.qmd
     - realData.qmd
-    - simulation.qmd
+    
 
 format:
   html:
