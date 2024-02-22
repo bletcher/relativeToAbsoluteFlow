@@ -754,7 +754,7 @@ $ifailtext
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>get_observed_data_figs <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn, dInSampleApprox, dInSample) {</span>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>get_observed_data_figs <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn, dInSampleApprox, dInSample, <span class="at">base_size =</span> <span class="dv">12</span>) {</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  fig_all <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dIn, <span class="fu">aes</span>(score_scaled, score_scaled_ecdf)) <span class="sc">+</span> </span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
@@ -762,7 +762,7 @@ $ifailtext
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">data =</span> dInSample) <span class="sc">+</span></span>
 <span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = scaled observed score, Blue = scaled observed flow, Orange = subsampled flow"</span>, <span class="at">y =</span> <span class="st">"Emp cumul dist"</span>) <span class="sc">+</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() </span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>(<span class="at">base_size =</span> base_size) </span>
 <span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a> </span>
@@ -775,7 +775,7 @@ $ifailtext
 <span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>get_smoothed_data_figs <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn, dInSampleApprox, dInSample) {</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>get_smoothed_data_figs <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn, dInSampleApprox, dInSample, <span class="at">base_size_in =</span> <span class="dv">12</span>) {</span>
 <span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  fig_smooth_binomial <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dIn, <span class="fu">aes</span>(score_scaled, score_scaled_ecdf)) <span class="sc">+</span> </span>
 <span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
@@ -787,7 +787,7 @@ $ifailtext
 <span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
 <span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"Emp cumul dist"</span>) <span class="sc">+</span></span>
 <span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Binomial smooth of subsampled flow"</span>) <span class="sc">+</span></span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() <span class="sc">+</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>(<span class="at">base_size =</span> base_size_in) <span class="sc">+</span></span>
 <span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.8</span>)))</span>
 <span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -801,7 +801,7 @@ $ifailtext
 <span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
 <span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = scaled image score, Orange = subsampled flow"</span>, <span class="at">y =</span> <span class="st">"Emp cumul dist"</span>) <span class="sc">+</span></span>
 <span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"GAM smooth of subsampled flow"</span>) <span class="sc">+</span></span>
-<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() <span class="sc">+</span></span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>(<span class="at">base_size =</span> base_size_in) <span class="sc">+</span></span>
 <span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.8</span>)))</span>
 <span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make ggtitle smaller </span></span>
@@ -812,7 +812,7 @@ $ifailtext
 <span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"Emp cumul dist"</span>) <span class="sc">+</span></span>
 <span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># smaller font size for ggtitle </span></span>
 <span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Linear interpolation of subsampled flow"</span>) <span class="sc">+</span></span>
-<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() <span class="sc">+</span></span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>(<span class="at">base_size =</span> base_size_in) <span class="sc">+</span></span>
 <span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.8</span>)))</span>
 <span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(</span>
@@ -825,7 +825,7 @@ $ifailtext
 <span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>plotSubSample <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn0, numSample){</span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>plotSubSample <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn0, numSample, <span class="at">base_size_in =</span> <span class="dv">12</span>){</span>
 <span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a>   dIn <span class="ot">&lt;-</span> dIn0 <span class="sc">|&gt;</span> </span>
 <span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a>     dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
@@ -851,8 +851,8 @@ $ifailtext
 <span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb26-96"><a href="#cb26-96" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb26-97"><a href="#cb26-97" aria-hidden="true" tabindex="-1"></a>  <span class="co"># these data are the same with or without anchors</span></span>
-<span id="cb26-98"><a href="#cb26-98" aria-hidden="true" tabindex="-1"></a>  get_observed_data_figs <span class="ot">&lt;-</span> <span class="fu">get_observed_data_figs</span>(dIn, dInSampleApprox_no_anchors, dInSample_no_anchors)</span>
-<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a>  get_smoothed_data_figs_no_anchors <span class="ot">&lt;-</span> <span class="fu">get_smoothed_data_figs</span>(dIn, dInSampleApprox_no_anchors, dInSample_no_anchors)</span>
+<span id="cb26-98"><a href="#cb26-98" aria-hidden="true" tabindex="-1"></a>  get_observed_data_figs <span class="ot">&lt;-</span> <span class="fu">get_observed_data_figs</span>(dIn, dInSampleApprox_no_anchors, dInSample_no_anchors, <span class="at">base_size =</span> base_size_in)</span>
+<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a>  get_smoothed_data_figs_no_anchors <span class="ot">&lt;-</span> <span class="fu">get_smoothed_data_figs</span>(dIn, dInSampleApprox_no_anchors, dInSample_no_anchors, <span class="at">base_size =</span> base_size_in)</span>
 <span id="cb26-100"><a href="#cb26-100" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb26-101"><a href="#cb26-101" aria-hidden="true" tabindex="-1"></a>  figs_observed_data <span class="ot">&lt;-</span> <span class="co">#ggarrange(</span></span>
 <span id="cb26-102"><a href="#cb26-102" aria-hidden="true" tabindex="-1"></a>    get_observed_data_figs<span class="sc">$</span>fig_all </span>
@@ -913,8 +913,8 @@ $ifailtext
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">100</span>, <span class="at">base_size_in =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$figs_observed_data</code></pre>
@@ -955,8 +955,8 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">10</span>, <span class="at">base_size_in =</span> <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$figs_observed_data</code></pre>
@@ -997,7 +997,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -1039,7 +1039,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -1081,7 +1081,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -2132,7 +2132,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-376"><a href="#cb50-376" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb50-377"><a href="#cb50-377" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: subsampleFlow</span></span>
 <span id="cb50-378"><a href="#cb50-378" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-379"><a href="#cb50-379" aria-hidden="true" tabindex="-1"></a>get_observed_data_figs <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn, dInSampleApprox, dInSample) {</span>
+<span id="cb50-379"><a href="#cb50-379" aria-hidden="true" tabindex="-1"></a>get_observed_data_figs <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn, dInSampleApprox, dInSample, <span class="at">base_size =</span> <span class="dv">12</span>) {</span>
 <span id="cb50-380"><a href="#cb50-380" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb50-381"><a href="#cb50-381" aria-hidden="true" tabindex="-1"></a>  fig_all <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dIn, <span class="fu">aes</span>(score_scaled, score_scaled_ecdf)) <span class="sc">+</span> </span>
 <span id="cb50-382"><a href="#cb50-382" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
@@ -2140,7 +2140,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-384"><a href="#cb50-384" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb50-385"><a href="#cb50-385" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">data =</span> dInSample) <span class="sc">+</span></span>
 <span id="cb50-386"><a href="#cb50-386" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = scaled observed score, Blue = scaled observed flow, Orange = subsampled flow"</span>, <span class="at">y =</span> <span class="st">"Emp cumul dist"</span>) <span class="sc">+</span></span>
-<span id="cb50-387"><a href="#cb50-387" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() </span>
+<span id="cb50-387"><a href="#cb50-387" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>(<span class="at">base_size =</span> base_size) </span>
 <span id="cb50-388"><a href="#cb50-388" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb50-389"><a href="#cb50-389" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-390"><a href="#cb50-390" aria-hidden="true" tabindex="-1"></a> </span>
@@ -2153,7 +2153,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-397"><a href="#cb50-397" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb50-398"><a href="#cb50-398" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb50-399"><a href="#cb50-399" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-400"><a href="#cb50-400" aria-hidden="true" tabindex="-1"></a>get_smoothed_data_figs <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn, dInSampleApprox, dInSample) {</span>
+<span id="cb50-400"><a href="#cb50-400" aria-hidden="true" tabindex="-1"></a>get_smoothed_data_figs <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn, dInSampleApprox, dInSample, <span class="at">base_size_in =</span> <span class="dv">12</span>) {</span>
 <span id="cb50-401"><a href="#cb50-401" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb50-402"><a href="#cb50-402" aria-hidden="true" tabindex="-1"></a>  fig_smooth_binomial <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dIn, <span class="fu">aes</span>(score_scaled, score_scaled_ecdf)) <span class="sc">+</span> </span>
 <span id="cb50-403"><a href="#cb50-403" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
@@ -2165,7 +2165,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-409"><a href="#cb50-409" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
 <span id="cb50-410"><a href="#cb50-410" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"Emp cumul dist"</span>) <span class="sc">+</span></span>
 <span id="cb50-411"><a href="#cb50-411" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Binomial smooth of subsampled flow"</span>) <span class="sc">+</span></span>
-<span id="cb50-412"><a href="#cb50-412" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() <span class="sc">+</span></span>
+<span id="cb50-412"><a href="#cb50-412" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>(<span class="at">base_size =</span> base_size_in) <span class="sc">+</span></span>
 <span id="cb50-413"><a href="#cb50-413" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.8</span>)))</span>
 <span id="cb50-414"><a href="#cb50-414" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb50-415"><a href="#cb50-415" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -2179,7 +2179,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-423"><a href="#cb50-423" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
 <span id="cb50-424"><a href="#cb50-424" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = scaled image score, Orange = subsampled flow"</span>, <span class="at">y =</span> <span class="st">"Emp cumul dist"</span>) <span class="sc">+</span></span>
 <span id="cb50-425"><a href="#cb50-425" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"GAM smooth of subsampled flow"</span>) <span class="sc">+</span></span>
-<span id="cb50-426"><a href="#cb50-426" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() <span class="sc">+</span></span>
+<span id="cb50-426"><a href="#cb50-426" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>(<span class="at">base_size =</span> base_size_in) <span class="sc">+</span></span>
 <span id="cb50-427"><a href="#cb50-427" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.8</span>)))</span>
 <span id="cb50-428"><a href="#cb50-428" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb50-429"><a href="#cb50-429" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make ggtitle smaller </span></span>
@@ -2190,7 +2190,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-434"><a href="#cb50-434" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"Emp cumul dist"</span>) <span class="sc">+</span></span>
 <span id="cb50-435"><a href="#cb50-435" aria-hidden="true" tabindex="-1"></a>    <span class="co"># smaller font size for ggtitle </span></span>
 <span id="cb50-436"><a href="#cb50-436" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Linear interpolation of subsampled flow"</span>) <span class="sc">+</span></span>
-<span id="cb50-437"><a href="#cb50-437" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() <span class="sc">+</span></span>
+<span id="cb50-437"><a href="#cb50-437" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>(<span class="at">base_size =</span> base_size_in) <span class="sc">+</span></span>
 <span id="cb50-438"><a href="#cb50-438" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.8</span>)))</span>
 <span id="cb50-439"><a href="#cb50-439" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb50-440"><a href="#cb50-440" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(</span>
@@ -2203,7 +2203,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-447"><a href="#cb50-447" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb50-448"><a href="#cb50-448" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-449"><a href="#cb50-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-450"><a href="#cb50-450" aria-hidden="true" tabindex="-1"></a>plotSubSample <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn0, numSample){</span>
+<span id="cb50-450"><a href="#cb50-450" aria-hidden="true" tabindex="-1"></a>plotSubSample <span class="ot">&lt;-</span> <span class="cf">function</span>(dIn0, numSample, <span class="at">base_size_in =</span> <span class="dv">12</span>){</span>
 <span id="cb50-451"><a href="#cb50-451" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-452"><a href="#cb50-452" aria-hidden="true" tabindex="-1"></a>   dIn <span class="ot">&lt;-</span> dIn0 <span class="sc">|&gt;</span> </span>
 <span id="cb50-453"><a href="#cb50-453" aria-hidden="true" tabindex="-1"></a>     dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
@@ -2229,8 +2229,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-473"><a href="#cb50-473" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb50-474"><a href="#cb50-474" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb50-475"><a href="#cb50-475" aria-hidden="true" tabindex="-1"></a>  <span class="co"># these data are the same with or without anchors</span></span>
-<span id="cb50-476"><a href="#cb50-476" aria-hidden="true" tabindex="-1"></a>  get_observed_data_figs <span class="ot">&lt;-</span> <span class="fu">get_observed_data_figs</span>(dIn, dInSampleApprox_no_anchors, dInSample_no_anchors)</span>
-<span id="cb50-477"><a href="#cb50-477" aria-hidden="true" tabindex="-1"></a>  get_smoothed_data_figs_no_anchors <span class="ot">&lt;-</span> <span class="fu">get_smoothed_data_figs</span>(dIn, dInSampleApprox_no_anchors, dInSample_no_anchors)</span>
+<span id="cb50-476"><a href="#cb50-476" aria-hidden="true" tabindex="-1"></a>  get_observed_data_figs <span class="ot">&lt;-</span> <span class="fu">get_observed_data_figs</span>(dIn, dInSampleApprox_no_anchors, dInSample_no_anchors, <span class="at">base_size =</span> base_size_in)</span>
+<span id="cb50-477"><a href="#cb50-477" aria-hidden="true" tabindex="-1"></a>  get_smoothed_data_figs_no_anchors <span class="ot">&lt;-</span> <span class="fu">get_smoothed_data_figs</span>(dIn, dInSampleApprox_no_anchors, dInSample_no_anchors, <span class="at">base_size =</span> base_size_in)</span>
 <span id="cb50-478"><a href="#cb50-478" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb50-479"><a href="#cb50-479" aria-hidden="true" tabindex="-1"></a>  figs_observed_data <span class="ot">&lt;-</span> <span class="co">#ggarrange(</span></span>
 <span id="cb50-480"><a href="#cb50-480" aria-hidden="true" tabindex="-1"></a>    get_observed_data_figs<span class="sc">$</span>fig_all </span>
@@ -2290,8 +2290,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-536"><a href="#cb50-536" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb50-537"><a href="#cb50-537" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_100</span></span>
 <span id="cb50-538"><a href="#cb50-538" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-539"><a href="#cb50-539" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb50-540"><a href="#cb50-540" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">100</span>)</span>
+<span id="cb50-539"><a href="#cb50-539" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb50-540"><a href="#cb50-540" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">100</span>, <span class="at">base_size_in =</span> <span class="dv">10</span>)</span>
 <span id="cb50-541"><a href="#cb50-541" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-542"><a href="#cb50-542" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb50-543"><a href="#cb50-543" aria-hidden="true" tabindex="-1"></a></span>
@@ -2299,8 +2299,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-547"><a href="#cb50-547" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb50-548"><a href="#cb50-548" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_10</span></span>
 <span id="cb50-549"><a href="#cb50-549" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-550"><a href="#cb50-550" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb50-551"><a href="#cb50-551" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">10</span>)</span>
+<span id="cb50-550"><a href="#cb50-550" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb50-551"><a href="#cb50-551" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">10</span>, <span class="at">base_size_in =</span> <span class="dv">8</span>)</span>
 <span id="cb50-552"><a href="#cb50-552" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-553"><a href="#cb50-553" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb50-554"><a href="#cb50-554" aria-hidden="true" tabindex="-1"></a></span>
@@ -2308,7 +2308,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-558"><a href="#cb50-558" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb50-559"><a href="#cb50-559" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_7</span></span>
 <span id="cb50-560"><a href="#cb50-560" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-561"><a href="#cb50-561" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb50-561"><a href="#cb50-561" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb50-562"><a href="#cb50-562" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">7</span>)</span>
 <span id="cb50-563"><a href="#cb50-563" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-564"><a href="#cb50-564" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
@@ -2318,7 +2318,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-570"><a href="#cb50-570" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb50-571"><a href="#cb50-571" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_4</span></span>
 <span id="cb50-572"><a href="#cb50-572" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-573"><a href="#cb50-573" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb50-573"><a href="#cb50-573" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb50-574"><a href="#cb50-574" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">4</span>)</span>
 <span id="cb50-575"><a href="#cb50-575" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-576"><a href="#cb50-576" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
@@ -2327,7 +2327,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb50-581"><a href="#cb50-581" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb50-582"><a href="#cb50-582" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_3</span></span>
 <span id="cb50-583"><a href="#cb50-583" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-584"><a href="#cb50-584" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb50-584"><a href="#cb50-584" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb50-585"><a href="#cb50-585" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">3</span>)</span>
 <span id="cb50-586"><a href="#cb50-586" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-587"><a href="#cb50-587" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
