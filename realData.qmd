@@ -357,9 +357,61 @@ ggplot(dWB0, aes(flow_cfs_log10_scaled_ecdf, flow_cfs_log10_scaled)) +
 ```{r}
 #| label: subsampleFlow
 
+get_figures <- function(dIn, dInSampleApprox, dInSample) {
+  fig_flow <- ggplot(dIn, aes(score_scaled, score_scaled_ecdf)) + 
+    geom_line(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "blue", size = 2) +
+    labs(x = "Scaled observed flow", y = "Empirical cumulative distribution") +
+    theme_publication() 
+  
+  fig_score <- ggplot(dIn, aes(score_scaled, score_scaled_ecdf)) + 
+    geom_line(size = 2) +
+    labs(x = "Scaled image score", y = "Empirical cumulative distribution") +
+    theme_publication() 
 
-#dWB0$flow_cfs_log10_scaled_ecdf = getECDF(dWB0$flow_cfs_log10_scaled)
-
+  fig_subsample <- ggplot(dIn) + 
+    geom_line(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "blue", size = 2) +
+    geom_point(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "orange", size = 4, data = dInSample) +
+    labs(x = "Blue = observed scaled flow, Orange = subsampled flow", y = "Empirical cumulative distribution") +
+    theme_publication() 
+  
+  fig_smooth_binomial <- ggplot(dIn, aes(score_scaled, score_scaled_ecdf)) + 
+    geom_line() +
+    geom_point(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "orange", size = 4, data = dInSample) +
+    geom_smooth(
+      aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf),
+      method = "glm", method.args= list(family="binomial"), se = FALSE, color = "orange",
+      data = dInSample
+      ) +
+    labs(x = "Black = scaled image score, Orange = subsampled flow", y = "Empirical cumulative distribution") +
+    ggtitle("Binomial smooth of subsampled flow") +
+    theme_publication() 
+  
+    
+  fig_smooth_gam <- ggplot(dIn, aes(score_scaled, score_scaled_ecdf)) + 
+    geom_line() +
+    geom_point(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "orange", size = 4, data = dInSample) +
+    geom_smooth(
+      aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf),
+      se = FALSE, color = "orange", linetype = "dashed",
+      data = dInSample
+      ) +
+    labs(x = "Black = scaled image score, Orange = subsampled flow", y = "Empirical cumulative distribution") +
+    ggtitle("GAM smooth of subsampled flow") +
+    theme_publication() 
+  
+    
+  fig_smooth_interpolate <- ggplot(dIn, aes(score_scaled, score_scaled_ecdf)) + 
+    geom_line() +
+    geom_line(aes(x, y), color = "orange", size = 2, data = dInSampleApprox) +
+    geom_point(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "orange", size = 4, data = dInSample) +
+    labs(x = "Black = scaled image score, Orange = subsampled flow", y = "Empirical cumulative distribution") +
+    ggtitle("Linear interpolation of subsampled flow") +
+    theme_publication() 
+  
+  return(list(
+    fig_flow=fig_flow, fig_score=fig_score, fig_subsample=fig_subsample, fig_smooth_binomial=fig_smooth_binomial, fig_smooth_gam=fig_smooth_gam, fig_smooth_interpolate=fig_smooth_interpolate)
+    )
+}
 
 plotSubSample <- function(dIn0, numSample, add_anchors = TRUE){
 
@@ -382,50 +434,132 @@ plotSubSample <- function(dIn0, numSample, add_anchors = TRUE){
     )
   }
   
+  dInSampleApprox <- data.frame(approx(dInSample$flow_cfs_log10_scaled, dInSample$flow_cfs_log10_scaled_ecdf, dInSample$flow_cfs_log10_scaled))
   
-  dInSampleApprox <- data.frame(approx(dIn$score_scaled, dIn$score_scaled_ecdf, dInSample$score_scaled))
+  figs <- get_figures(dIn, dInSampleApprox, dInSample)
   
-  ggplot(dIn, aes(score_scaled, score_scaled_ecdf)) + 
-    #stat_ecdf(geom = "step") +
-    #stat_ecdf(aes(flow_cfs_log10_scaled), color = "blue") +
-    geom_line() +
-    geom_line(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "blue") +
-    geom_point(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "orange", size = 4, data = dInSample) +
-    #geom_point(aes(x,y), data = dInSampleApprox) +
-    #stat_ecdf(aes(flowScaled), color = "orange", data = flowSample) +
-    #stat_ecdf(aes(flow_cfs_log10_scaled), color = "orange", geom = "point", size = 3, data = flowSample) +
-    #stat_ecdf(aes(flow_cfs_log10_scaled), color = "orange", geom = "smooth", data = flowSample) +
-    geom_smooth(
-      aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf),
-      method = "glm", method.args= list(family="binomial"), se = FALSE, color = "orange",
-      data = dInSample
-      ) +
-    geom_smooth(
-      aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf),
-      se = FALSE, color = "orange", linetype = "dashed",
-      data = dInSample
-      ) +
-    labs(x = "Scaled values, blue = Observed flow, black = image score, orange = subsampled flow", y = "Empirical cumulative distribution") +
-    theme_publication() 
+  
+  ggarrange(figs$fig_flow, figs$fig_score, figs$fig_subsample, figs$fig_smooth_interpolate, figs$fig_smooth_binomial, figs$fig_smooth_gam, ncol = 2, nrow = 3)
+  
 }
 
+
+
+
+plotSubSample <- function(dIn0, numSample){
+
+   dIn <- dIn0 |> 
+     dplyr::select(
+      flow_cfs_log10_scaled, 
+      flow_cfs_log10_scaled_ecdf,
+      score_scaled, 
+      score_scaled_ecdf
+    )
+
+  # subsample dIn  
+  dInSample <- sample_n(dIn, numSample) 
+  
+  #############################################
+  # without anchors  
+  dInSample_no_anchors <- dInSample
+  
+  dInSampleApprox_no_anchors <- data.frame(
+    approx(
+      dInSample_no_anchors$flow_cfs_log10_scaled, 
+      dInSample_no_anchors$flow_cfs_log10_scaled_ecdf, 
+      dInSample_no_anchors$flow_cfs_log10_scaled
+      )
+    )
+  
+  get_figs_no_anchors <- get_figures(dIn, dInSampleApprox_no_anchors, dInSample_no_anchors)
+  
+  figs_no_anchors <- ggarrange(
+    get_figs_no_anchors$fig_flow, 
+    get_figs_no_anchors$fig_score, 
+    get_figs_no_anchors$fig_subsample, 
+    get_figs_no_anchors$fig_smooth_interpolate, 
+    get_figs_no_anchors$fig_smooth_binomial, 
+    get_figs_no_anchors$fig_smooth_gam, 
+    ncol = 2, nrow = 3
+  )
+  
+  #############################################
+  # with anchors  
+  
+  # add in min and max flow samples for anchors
+  dInSample_with_anchors <- rbind(
+    dInSample, 
+    dIn |> filter(flow_cfs_log10_scaled == max(flow_cfs_log10_scaled)) |> filter(score_scaled == max(score_scaled)),
+    dIn |> filter(flow_cfs_log10_scaled == min(flow_cfs_log10_scaled)) |> filter(score_scaled == min(score_scaled))
+  )
+  
+  dInSampleApprox_with_anchors <- data.frame(
+    approx(
+      dInSample_with_anchors$flow_cfs_log10_scaled, 
+      dInSample_with_anchors$flow_cfs_log10_scaled_ecdf, 
+      dInSample_with_anchors$flow_cfs_log10_scaled
+      )
+    )
+  
+  get_figs_with_anchors <- get_figures(dIn, dInSampleApprox_with_anchors, dInSample_with_anchors)
+  
+  figs_with_anchors <- ggarrange(
+    get_figs_with_anchors$fig_flow, 
+    get_figs_with_anchors$fig_score, 
+    get_figs_with_anchors$fig_subsample, 
+    get_figs_with_anchors$fig_smooth_interpolate, 
+    get_figs_with_anchors$fig_smooth_binomial, 
+    get_figs_with_anchors$fig_smooth_gam, 
+    ncol = 2, nrow = 3
+  )
+  
+  
+  return(
+    list(
+      figs_no_anchors=figs_no_anchors, 
+      figs_with_anchors=figs_with_anchors
+    )
+  )
+  
+}
+```
+
+100 samples  
+First set of graphs includes min/max flow anchors, second set does not.
+```{r}
+#| label: plotSubSample_100
+#| 
 plotSubSample(dWB0, 100)
-plotSubSample(dWB0, 100, FALSE)
 
+```
+
+10 subsamples
+```{r}
+#| label: plotSubSample_10
+#| 
 plotSubSample(dWB0, 10)
-plotSubSample(dWB0, 10, FALSE)
 
-plotSubSample(dWB0, 1)
-plotSubSample(dWB0, 1, FALSE)
+```
 
+4 subsamples
+```{r}
+#| label: plotSubSample_4
+#| 
+plotSubSample(dWB0, 4)
 
+```
+
+1 subsample
+```{r}  
+#| label: plotSubSample_1
+#| 
+plotSubSample(dWB0, 2)
+
+```
+
+```{r}
 hist(dWB0$flow_cfs_log10)
 hist(dWB0$flow_cfs)
-
-
-
-
-
 
 
 relFlow_WB0 <- data.frame(
