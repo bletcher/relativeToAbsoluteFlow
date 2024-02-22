@@ -371,7 +371,7 @@ get_observed_data_figs <- function(dIn, dInSampleApprox, dInSample) {
   fig_subsample <- ggplot(dIn) + 
     geom_line(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "blue", size = 2) +
     geom_point(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "orange", size = 4, data = dInSample) +
-    labs(x = "Blue = observed scaled flow, Orange = subsampled flow", y = "Emp cumul dist") +
+    labs(x = "Blue = scaled observed flow, Orange = subsampled flow", y = "Emp cumul dist") +
     theme_publication() 
   
  
@@ -394,7 +394,7 @@ get_smoothed_data_figs <- function(dIn, dInSampleApprox, dInSample) {
       method = "glm", method.args= list(family="binomial"), se = FALSE, color = "orange",
       data = dInSample
       ) +
-    labs(x = "Black = scaled image score, Orange = subsampled flow", y = "Emp cumul dist") +
+    labs(x = "", y = "Emp cumul dist") +
     ggtitle("Binomial smooth of subsampled flow") +
     theme_publication() 
   
@@ -416,7 +416,7 @@ get_smoothed_data_figs <- function(dIn, dInSampleApprox, dInSample) {
     geom_line() +
     geom_line(aes(x, y), color = "orange", size = 2, data = dInSampleApprox) +
     geom_point(aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "orange", size = 4, data = dInSample) +
-    labs(x = "Black = scaled image score, Orange = subsampled flow", y = "Emp cumul dist") +
+    labs(x = "", y = "Emp cumul dist") +
     ggtitle("Linear interpolation of subsampled flow") +
     theme_publication() 
   
