@@ -119,11 +119,13 @@ dG <- d |>
 
   
 d <- d |> 
-  left_join(dG)
+  left_join(dG) |> 
+  filter(
+    !is.na(flow_cfs_log10)
+  )
 
 dWB0 <- d |> 
   filter(
-    !is.na(flow_cfs_log10), 
     station_name %in% "West Brook 0_01171100"
   )
 ```
@@ -368,7 +370,6 @@ get_observed_data_figs <- function(dIn, dInSampleApprox, dInSample, base_size = 
     theme_publication(base_size = base_size) 
   
 
- 
   return(
     list(
       fig_all=fig_all 
@@ -510,7 +511,12 @@ plotSubSample <- function(dIn0, numSample, base_size_in = 12){
 }
 ```
 
-### 100 samples  
+
+
+::: panel-tabset
+### West Brook0
+
+#### 100 samples  
 First set of graphs does not include min/max flow anchors, second set does.
 ```{r}
 #| label: plotSubSample_100
@@ -520,7 +526,7 @@ plotSubSample(dWB0, 100, base_size_in = 10)
 
 ```
 
-### 10 subsamples
+#### 10 subsamples
 ```{r}
 #| label: plotSubSample_10
 
@@ -529,7 +535,7 @@ plotSubSample(dWB0, 10, base_size_in = 8)
 
 ```
 
-### 7 subsamples
+#### 7 subsamples
 ```{r}
 #| label: plotSubSample_7
 
@@ -539,7 +545,7 @@ plotSubSample(dWB0, 7)
 ```
 
 
-### 4 subsamples
+#### 4 subsamples
 ```{r}
 #| label: plotSubSample_4
 
@@ -548,7 +554,7 @@ plotSubSample(dWB0, 4)
 
 ```
 
-### 3 subsample
+#### 3 subsample
 ```{r}  
 #| label: plotSubSample_3
 
@@ -556,6 +562,67 @@ dummy <- 2
 plotSubSample(dWB0, 3)
 
 ```
+
+### Avery Brook Bridge
+```{r}
+#| label: AB_data
+
+dAB <- d |> filter(station_name == "Avery Brook_Bridge_01171000") 
+```
+
+#### 100 samples  
+First set of graphs does not include min/max flow anchors, second set does.
+```{r}
+#| label: plotSubSample_100_dAB
+
+dummy <- 2
+plotSubSample(dAB, 100, base_size_in = 10)
+
+```
+
+#### 10 subsamples
+```{r}
+#| label: plotSubSample_10_dAB
+
+dummy <- 2
+plotSubSample(dAB, 10, base_size_in = 8)
+
+```
+
+#### 7 subsamples
+```{r}
+#| label: plotSubSample_7_dAB
+
+dummy <- 2
+plotSubSample(dAB, 7)
+
+```
+
+
+#### 4 subsamples
+```{r}
+#| label: plotSubSample_4_dAB
+
+dummy <- 2
+plotSubSample(dAB, 4)
+
+```
+
+#### 3 subsample
+```{r}  
+#| label: plotSubSample_3_dAB
+
+dummy <- 2
+plotSubSample(dAB, 3)
+
+```
+
+
+
+:::
+
+
+
 
 ```{r}
 hist(dWB0$flow_cfs_log10)
