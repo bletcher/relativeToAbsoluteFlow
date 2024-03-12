@@ -892,39 +892,50 @@ $ifailtext
 <span id="cb27-135"><a href="#cb27-135" aria-hidden="true" tabindex="-1"></a>  <span class="co"># with anchors  </span></span>
 <span id="cb27-136"><a href="#cb27-136" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb27-137"><a href="#cb27-137" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add in min and max flow samples for anchors</span></span>
-<span id="cb27-138"><a href="#cb27-138" aria-hidden="true" tabindex="-1"></a>  dInSample_with_anchors <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb27-139"><a href="#cb27-139" aria-hidden="true" tabindex="-1"></a>    dInSample, </span>
-<span id="cb27-140"><a href="#cb27-140" aria-hidden="true" tabindex="-1"></a>    dIn <span class="sc">|&gt;</span> <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">max</span>(flow_cfs_log10_scaled)) <span class="sc">|&gt;</span> <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">max</span>(score_scaled)),</span>
-<span id="cb27-141"><a href="#cb27-141" aria-hidden="true" tabindex="-1"></a>    dIn <span class="sc">|&gt;</span> <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">min</span>(flow_cfs_log10_scaled)) <span class="sc">|&gt;</span> <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">min</span>(score_scaled))</span>
-<span id="cb27-142"><a href="#cb27-142" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb27-143"><a href="#cb27-143" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb27-144"><a href="#cb27-144" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Observed data - these data are the same with or without anchors</span></span>
-<span id="cb27-145"><a href="#cb27-145" aria-hidden="true" tabindex="-1"></a>  get_observed_data_figs_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_observed_data_figs</span>(dIn, dInSample_with_anchors, <span class="at">base_size =</span> base_size_in)</span>
-<span id="cb27-146"><a href="#cb27-146" aria-hidden="true" tabindex="-1"></a>  figs_observed_data_with_anchors <span class="ot">&lt;-</span> get_observed_data_figs_with_anchors<span class="sc">$</span>fig_all </span>
-<span id="cb27-147"><a href="#cb27-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-148"><a href="#cb27-148" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Interpolated or smoothed data</span></span>
-<span id="cb27-149"><a href="#cb27-149" aria-hidden="true" tabindex="-1"></a>  dInSample_interp_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_preds_interp</span>(dInSample_with_anchors, num_pred_points)</span>
-<span id="cb27-150"><a href="#cb27-150" aria-hidden="true" tabindex="-1"></a>  dInSample_gam_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_preds_gam</span>(dInSample_with_anchors, num_pred_points)</span>
-<span id="cb27-151"><a href="#cb27-151" aria-hidden="true" tabindex="-1"></a>                                                </span>
-<span id="cb27-152"><a href="#cb27-152" aria-hidden="true" tabindex="-1"></a>  get_smoothed_data_figs_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_smoothed_data_figs</span>(dIn, dInSample_with_anchors, dInSample_interp_with_anchors, dInSample_gam_with_anchors, <span class="at">base_size =</span> base_size_in)</span>
-<span id="cb27-153"><a href="#cb27-153" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb27-154"><a href="#cb27-154" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
-<span id="cb27-155"><a href="#cb27-155" aria-hidden="true" tabindex="-1"></a>  figs_smoothed_data_with_anchors <span class="ot">&lt;-</span> <span class="fu">ggarrange</span>(</span>
-<span id="cb27-156"><a href="#cb27-156" aria-hidden="true" tabindex="-1"></a>    get_smoothed_data_figs_with_anchors<span class="sc">$</span>fig_smooth_interpolate, </span>
-<span id="cb27-157"><a href="#cb27-157" aria-hidden="true" tabindex="-1"></a>    <span class="co">#get_smoothed_data_figs_with_anchors$fig_smooth_binomial, </span></span>
-<span id="cb27-158"><a href="#cb27-158" aria-hidden="true" tabindex="-1"></a>    get_smoothed_data_figs_with_anchors<span class="sc">$</span>fig_smooth_gam, </span>
-<span id="cb27-159"><a href="#cb27-159" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">2</span></span>
-<span id="cb27-160"><a href="#cb27-160" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb27-161"><a href="#cb27-161" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb27-162"><a href="#cb27-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(</span>
-<span id="cb27-163"><a href="#cb27-163" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
-<span id="cb27-164"><a href="#cb27-164" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_observed_data=</span>figs_observed_data, </span>
-<span id="cb27-165"><a href="#cb27-165" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_smoothed_data_no_anchors=</span>figs_smoothed_data_no_anchors,</span>
-<span id="cb27-166"><a href="#cb27-166" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_smoothed_data_with_anchors=</span>figs_smoothed_data_with_anchors</span>
-<span id="cb27-167"><a href="#cb27-167" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb27-168"><a href="#cb27-168" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb27-169"><a href="#cb27-169" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb27-170"><a href="#cb27-170" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-138"><a href="#cb27-138" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb27-139"><a href="#cb27-139" aria-hidden="true" tabindex="-1"></a>  get_quantile_value <span class="ot">&lt;-</span> <span class="cf">function</span>(d, quant) {</span>
+<span id="cb27-140"><a href="#cb27-140" aria-hidden="true" tabindex="-1"></a>     q <span class="ot">&lt;-</span> <span class="fu">quantile</span>(d, quant) </span>
+<span id="cb27-141"><a href="#cb27-141" aria-hidden="true" tabindex="-1"></a>     row_n <span class="ot">&lt;-</span>  <span class="fu">min</span>(<span class="fu">which</span>(<span class="fu">abs</span>(d <span class="sc">-</span> q) <span class="sc">==</span> <span class="fu">min</span>(<span class="fu">abs</span>(d <span class="sc">-</span> q)))) <span class="co"># min to get 'unique' row number</span></span>
+<span id="cb27-142"><a href="#cb27-142" aria-hidden="true" tabindex="-1"></a>     <span class="fu">return</span>(d[row_n])</span>
+<span id="cb27-143"><a href="#cb27-143" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-144"><a href="#cb27-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-145"><a href="#cb27-145" aria-hidden="true" tabindex="-1"></a>  dInSample_with_anchors <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb27-146"><a href="#cb27-146" aria-hidden="true" tabindex="-1"></a>    dInSample, </span>
+<span id="cb27-147"><a href="#cb27-147" aria-hidden="true" tabindex="-1"></a>    dIn <span class="sc">|&gt;</span> </span>
+<span id="cb27-148"><a href="#cb27-148" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value</span>(flow_cfs_log10_scaled, <span class="fl">0.01</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb27-149"><a href="#cb27-149" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value</span>(score_scaled, <span class="fl">0.01</span>)),</span>
+<span id="cb27-150"><a href="#cb27-150" aria-hidden="true" tabindex="-1"></a>    dIn <span class="sc">|&gt;</span> </span>
+<span id="cb27-151"><a href="#cb27-151" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value</span>(flow_cfs_log10_scaled, <span class="fl">0.99</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb27-152"><a href="#cb27-152" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value</span>(score_scaled, <span class="fl">0.99</span>))</span>
+<span id="cb27-153"><a href="#cb27-153" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-154"><a href="#cb27-154" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-155"><a href="#cb27-155" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Observed data - these data are the same with or without anchors</span></span>
+<span id="cb27-156"><a href="#cb27-156" aria-hidden="true" tabindex="-1"></a>  get_observed_data_figs_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_observed_data_figs</span>(dIn, dInSample_with_anchors, <span class="at">base_size =</span> base_size_in)</span>
+<span id="cb27-157"><a href="#cb27-157" aria-hidden="true" tabindex="-1"></a>  figs_observed_data_with_anchors <span class="ot">&lt;-</span> get_observed_data_figs_with_anchors<span class="sc">$</span>fig_all </span>
+<span id="cb27-158"><a href="#cb27-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-159"><a href="#cb27-159" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Interpolated or smoothed data</span></span>
+<span id="cb27-160"><a href="#cb27-160" aria-hidden="true" tabindex="-1"></a>  dInSample_interp_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_preds_interp</span>(dInSample_with_anchors, num_pred_points)</span>
+<span id="cb27-161"><a href="#cb27-161" aria-hidden="true" tabindex="-1"></a>  dInSample_gam_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_preds_gam</span>(dInSample_with_anchors, num_pred_points)</span>
+<span id="cb27-162"><a href="#cb27-162" aria-hidden="true" tabindex="-1"></a>                                                </span>
+<span id="cb27-163"><a href="#cb27-163" aria-hidden="true" tabindex="-1"></a>  get_smoothed_data_figs_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_smoothed_data_figs</span>(dIn, dInSample_with_anchors, dInSample_interp_with_anchors, dInSample_gam_with_anchors, <span class="at">base_size =</span> base_size_in)</span>
+<span id="cb27-164"><a href="#cb27-164" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-165"><a href="#cb27-165" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb27-166"><a href="#cb27-166" aria-hidden="true" tabindex="-1"></a>  figs_smoothed_data_with_anchors <span class="ot">&lt;-</span> <span class="fu">ggarrange</span>(</span>
+<span id="cb27-167"><a href="#cb27-167" aria-hidden="true" tabindex="-1"></a>    get_smoothed_data_figs_with_anchors<span class="sc">$</span>fig_smooth_interpolate, </span>
+<span id="cb27-168"><a href="#cb27-168" aria-hidden="true" tabindex="-1"></a>    <span class="co">#get_smoothed_data_figs_with_anchors$fig_smooth_binomial, </span></span>
+<span id="cb27-169"><a href="#cb27-169" aria-hidden="true" tabindex="-1"></a>    get_smoothed_data_figs_with_anchors<span class="sc">$</span>fig_smooth_gam, </span>
+<span id="cb27-170"><a href="#cb27-170" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">2</span></span>
+<span id="cb27-171"><a href="#cb27-171" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-172"><a href="#cb27-172" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-173"><a href="#cb27-173" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(</span>
+<span id="cb27-174"><a href="#cb27-174" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb27-175"><a href="#cb27-175" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_observed_data=</span>figs_observed_data, </span>
+<span id="cb27-176"><a href="#cb27-176" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_smoothed_data_no_anchors=</span>figs_smoothed_data_no_anchors,</span>
+<span id="cb27-177"><a href="#cb27-177" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_smoothed_data_with_anchors=</span>figs_smoothed_data_with_anchors</span>
+<span id="cb27-178"><a href="#cb27-178" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb27-179"><a href="#cb27-179" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-180"><a href="#cb27-180" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-181"><a href="#cb27-181" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
@@ -937,8 +948,8 @@ $ifailtext
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">100</span>, <span class="at">base_size_in =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$figs_observed_data</code></pre>
@@ -979,8 +990,8 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">10</span>, <span class="at">base_size_in =</span> <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$figs_observed_data</code></pre>
@@ -1021,7 +1032,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -1063,7 +1074,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -1105,7 +1116,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -1156,7 +1167,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">100</span>, <span class="at">base_size_in =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -1198,7 +1209,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">10</span>, <span class="at">base_size_in =</span> <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -1240,7 +1251,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -1282,7 +1293,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -1324,7 +1335,7 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -2526,174 +2537,185 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb72-526"><a href="#cb72-526" aria-hidden="true" tabindex="-1"></a>  <span class="co"># with anchors  </span></span>
 <span id="cb72-527"><a href="#cb72-527" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb72-528"><a href="#cb72-528" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add in min and max flow samples for anchors</span></span>
-<span id="cb72-529"><a href="#cb72-529" aria-hidden="true" tabindex="-1"></a>  dInSample_with_anchors <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb72-530"><a href="#cb72-530" aria-hidden="true" tabindex="-1"></a>    dInSample, </span>
-<span id="cb72-531"><a href="#cb72-531" aria-hidden="true" tabindex="-1"></a>    dIn <span class="sc">|&gt;</span> <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">max</span>(flow_cfs_log10_scaled)) <span class="sc">|&gt;</span> <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">max</span>(score_scaled)),</span>
-<span id="cb72-532"><a href="#cb72-532" aria-hidden="true" tabindex="-1"></a>    dIn <span class="sc">|&gt;</span> <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">min</span>(flow_cfs_log10_scaled)) <span class="sc">|&gt;</span> <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">min</span>(score_scaled))</span>
-<span id="cb72-533"><a href="#cb72-533" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb72-534"><a href="#cb72-534" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb72-535"><a href="#cb72-535" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Observed data - these data are the same with or without anchors</span></span>
-<span id="cb72-536"><a href="#cb72-536" aria-hidden="true" tabindex="-1"></a>  get_observed_data_figs_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_observed_data_figs</span>(dIn, dInSample_with_anchors, <span class="at">base_size =</span> base_size_in)</span>
-<span id="cb72-537"><a href="#cb72-537" aria-hidden="true" tabindex="-1"></a>  figs_observed_data_with_anchors <span class="ot">&lt;-</span> get_observed_data_figs_with_anchors<span class="sc">$</span>fig_all </span>
-<span id="cb72-538"><a href="#cb72-538" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-539"><a href="#cb72-539" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Interpolated or smoothed data</span></span>
-<span id="cb72-540"><a href="#cb72-540" aria-hidden="true" tabindex="-1"></a>  dInSample_interp_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_preds_interp</span>(dInSample_with_anchors, num_pred_points)</span>
-<span id="cb72-541"><a href="#cb72-541" aria-hidden="true" tabindex="-1"></a>  dInSample_gam_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_preds_gam</span>(dInSample_with_anchors, num_pred_points)</span>
-<span id="cb72-542"><a href="#cb72-542" aria-hidden="true" tabindex="-1"></a>                                                </span>
-<span id="cb72-543"><a href="#cb72-543" aria-hidden="true" tabindex="-1"></a>  get_smoothed_data_figs_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_smoothed_data_figs</span>(dIn, dInSample_with_anchors, dInSample_interp_with_anchors, dInSample_gam_with_anchors, <span class="at">base_size =</span> base_size_in)</span>
-<span id="cb72-544"><a href="#cb72-544" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb72-545"><a href="#cb72-545" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
-<span id="cb72-546"><a href="#cb72-546" aria-hidden="true" tabindex="-1"></a>  figs_smoothed_data_with_anchors <span class="ot">&lt;-</span> <span class="fu">ggarrange</span>(</span>
-<span id="cb72-547"><a href="#cb72-547" aria-hidden="true" tabindex="-1"></a>    get_smoothed_data_figs_with_anchors<span class="sc">$</span>fig_smooth_interpolate, </span>
-<span id="cb72-548"><a href="#cb72-548" aria-hidden="true" tabindex="-1"></a>    <span class="co">#get_smoothed_data_figs_with_anchors$fig_smooth_binomial, </span></span>
-<span id="cb72-549"><a href="#cb72-549" aria-hidden="true" tabindex="-1"></a>    get_smoothed_data_figs_with_anchors<span class="sc">$</span>fig_smooth_gam, </span>
-<span id="cb72-550"><a href="#cb72-550" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">2</span></span>
-<span id="cb72-551"><a href="#cb72-551" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb72-552"><a href="#cb72-552" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb72-553"><a href="#cb72-553" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(</span>
-<span id="cb72-554"><a href="#cb72-554" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
-<span id="cb72-555"><a href="#cb72-555" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_observed_data=</span>figs_observed_data, </span>
-<span id="cb72-556"><a href="#cb72-556" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_smoothed_data_no_anchors=</span>figs_smoothed_data_no_anchors,</span>
-<span id="cb72-557"><a href="#cb72-557" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_smoothed_data_with_anchors=</span>figs_smoothed_data_with_anchors</span>
-<span id="cb72-558"><a href="#cb72-558" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb72-559"><a href="#cb72-559" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb72-560"><a href="#cb72-560" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb72-561"><a href="#cb72-561" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb72-562"><a href="#cb72-562" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb72-563"><a href="#cb72-563" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-564"><a href="#cb72-564" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-565"><a href="#cb72-565" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-566"><a href="#cb72-566" aria-hidden="true" tabindex="-1"></a>::: panel-tabset</span>
-<span id="cb72-567"><a href="#cb72-567" aria-hidden="true" tabindex="-1"></a><span class="fu">### West Brook0</span></span>
-<span id="cb72-568"><a href="#cb72-568" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-569"><a href="#cb72-569" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 100 samples  </span></span>
-<span id="cb72-570"><a href="#cb72-570" aria-hidden="true" tabindex="-1"></a>First set of graphs does not include min/max flow anchors, second set does.</span>
-<span id="cb72-573"><a href="#cb72-573" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-574"><a href="#cb72-574" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_100</span></span>
+<span id="cb72-529"><a href="#cb72-529" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb72-530"><a href="#cb72-530" aria-hidden="true" tabindex="-1"></a>  get_quantile_value <span class="ot">&lt;-</span> <span class="cf">function</span>(d, quant) {</span>
+<span id="cb72-531"><a href="#cb72-531" aria-hidden="true" tabindex="-1"></a>     q <span class="ot">&lt;-</span> <span class="fu">quantile</span>(d, quant) </span>
+<span id="cb72-532"><a href="#cb72-532" aria-hidden="true" tabindex="-1"></a>     row_n <span class="ot">&lt;-</span>  <span class="fu">min</span>(<span class="fu">which</span>(<span class="fu">abs</span>(d <span class="sc">-</span> q) <span class="sc">==</span> <span class="fu">min</span>(<span class="fu">abs</span>(d <span class="sc">-</span> q)))) <span class="co"># min to get 'unique' row number</span></span>
+<span id="cb72-533"><a href="#cb72-533" aria-hidden="true" tabindex="-1"></a>     <span class="fu">return</span>(d[row_n])</span>
+<span id="cb72-534"><a href="#cb72-534" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb72-535"><a href="#cb72-535" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-536"><a href="#cb72-536" aria-hidden="true" tabindex="-1"></a>  dInSample_with_anchors <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb72-537"><a href="#cb72-537" aria-hidden="true" tabindex="-1"></a>    dInSample, </span>
+<span id="cb72-538"><a href="#cb72-538" aria-hidden="true" tabindex="-1"></a>    dIn <span class="sc">|&gt;</span> </span>
+<span id="cb72-539"><a href="#cb72-539" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value</span>(flow_cfs_log10_scaled, <span class="fl">0.01</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb72-540"><a href="#cb72-540" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value</span>(score_scaled, <span class="fl">0.01</span>)),</span>
+<span id="cb72-541"><a href="#cb72-541" aria-hidden="true" tabindex="-1"></a>    dIn <span class="sc">|&gt;</span> </span>
+<span id="cb72-542"><a href="#cb72-542" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value</span>(flow_cfs_log10_scaled, <span class="fl">0.99</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb72-543"><a href="#cb72-543" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value</span>(score_scaled, <span class="fl">0.99</span>))</span>
+<span id="cb72-544"><a href="#cb72-544" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb72-545"><a href="#cb72-545" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb72-546"><a href="#cb72-546" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Observed data - these data are the same with or without anchors</span></span>
+<span id="cb72-547"><a href="#cb72-547" aria-hidden="true" tabindex="-1"></a>  get_observed_data_figs_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_observed_data_figs</span>(dIn, dInSample_with_anchors, <span class="at">base_size =</span> base_size_in)</span>
+<span id="cb72-548"><a href="#cb72-548" aria-hidden="true" tabindex="-1"></a>  figs_observed_data_with_anchors <span class="ot">&lt;-</span> get_observed_data_figs_with_anchors<span class="sc">$</span>fig_all </span>
+<span id="cb72-549"><a href="#cb72-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-550"><a href="#cb72-550" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Interpolated or smoothed data</span></span>
+<span id="cb72-551"><a href="#cb72-551" aria-hidden="true" tabindex="-1"></a>  dInSample_interp_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_preds_interp</span>(dInSample_with_anchors, num_pred_points)</span>
+<span id="cb72-552"><a href="#cb72-552" aria-hidden="true" tabindex="-1"></a>  dInSample_gam_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_preds_gam</span>(dInSample_with_anchors, num_pred_points)</span>
+<span id="cb72-553"><a href="#cb72-553" aria-hidden="true" tabindex="-1"></a>                                                </span>
+<span id="cb72-554"><a href="#cb72-554" aria-hidden="true" tabindex="-1"></a>  get_smoothed_data_figs_with_anchors <span class="ot">&lt;-</span> <span class="fu">get_smoothed_data_figs</span>(dIn, dInSample_with_anchors, dInSample_interp_with_anchors, dInSample_gam_with_anchors, <span class="at">base_size =</span> base_size_in)</span>
+<span id="cb72-555"><a href="#cb72-555" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb72-556"><a href="#cb72-556" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb72-557"><a href="#cb72-557" aria-hidden="true" tabindex="-1"></a>  figs_smoothed_data_with_anchors <span class="ot">&lt;-</span> <span class="fu">ggarrange</span>(</span>
+<span id="cb72-558"><a href="#cb72-558" aria-hidden="true" tabindex="-1"></a>    get_smoothed_data_figs_with_anchors<span class="sc">$</span>fig_smooth_interpolate, </span>
+<span id="cb72-559"><a href="#cb72-559" aria-hidden="true" tabindex="-1"></a>    <span class="co">#get_smoothed_data_figs_with_anchors$fig_smooth_binomial, </span></span>
+<span id="cb72-560"><a href="#cb72-560" aria-hidden="true" tabindex="-1"></a>    get_smoothed_data_figs_with_anchors<span class="sc">$</span>fig_smooth_gam, </span>
+<span id="cb72-561"><a href="#cb72-561" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">2</span></span>
+<span id="cb72-562"><a href="#cb72-562" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb72-563"><a href="#cb72-563" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb72-564"><a href="#cb72-564" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(</span>
+<span id="cb72-565"><a href="#cb72-565" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb72-566"><a href="#cb72-566" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_observed_data=</span>figs_observed_data, </span>
+<span id="cb72-567"><a href="#cb72-567" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_smoothed_data_no_anchors=</span>figs_smoothed_data_no_anchors,</span>
+<span id="cb72-568"><a href="#cb72-568" aria-hidden="true" tabindex="-1"></a>      <span class="at">figs_smoothed_data_with_anchors=</span>figs_smoothed_data_with_anchors</span>
+<span id="cb72-569"><a href="#cb72-569" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb72-570"><a href="#cb72-570" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb72-571"><a href="#cb72-571" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb72-572"><a href="#cb72-572" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb72-573"><a href="#cb72-573" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-574"><a href="#cb72-574" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-575"><a href="#cb72-575" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-576"><a href="#cb72-576" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-577"><a href="#cb72-577" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">100</span>, <span class="at">base_size_in =</span> <span class="dv">10</span>)</span>
-<span id="cb72-578"><a href="#cb72-578" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-579"><a href="#cb72-579" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb72-580"><a href="#cb72-580" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-581"><a href="#cb72-581" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 10 subsamples</span></span>
+<span id="cb72-576"><a href="#cb72-576" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-577"><a href="#cb72-577" aria-hidden="true" tabindex="-1"></a>::: panel-tabset</span>
+<span id="cb72-578"><a href="#cb72-578" aria-hidden="true" tabindex="-1"></a><span class="fu">### West Brook0</span></span>
+<span id="cb72-579"><a href="#cb72-579" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-580"><a href="#cb72-580" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 100 samples  </span></span>
+<span id="cb72-581"><a href="#cb72-581" aria-hidden="true" tabindex="-1"></a>First set of graphs does not include min/max flow anchors, second set does.</span>
 <span id="cb72-584"><a href="#cb72-584" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-585"><a href="#cb72-585" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_10</span></span>
+<span id="cb72-585"><a href="#cb72-585" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_100</span></span>
 <span id="cb72-586"><a href="#cb72-586" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-587"><a href="#cb72-587" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-588"><a href="#cb72-588" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">10</span>, <span class="at">base_size_in =</span> <span class="dv">8</span>)</span>
+<span id="cb72-587"><a href="#cb72-587" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-588"><a href="#cb72-588" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">100</span>)</span>
 <span id="cb72-589"><a href="#cb72-589" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-590"><a href="#cb72-590" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb72-591"><a href="#cb72-591" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-592"><a href="#cb72-592" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 7 subsamples</span></span>
+<span id="cb72-592"><a href="#cb72-592" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 10 subsamples</span></span>
 <span id="cb72-595"><a href="#cb72-595" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-596"><a href="#cb72-596" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_7</span></span>
+<span id="cb72-596"><a href="#cb72-596" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_10</span></span>
 <span id="cb72-597"><a href="#cb72-597" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-598"><a href="#cb72-598" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-599"><a href="#cb72-599" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">7</span>)</span>
+<span id="cb72-598"><a href="#cb72-598" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-599"><a href="#cb72-599" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">10</span>)</span>
 <span id="cb72-600"><a href="#cb72-600" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-601"><a href="#cb72-601" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb72-602"><a href="#cb72-602" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-603"><a href="#cb72-603" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-604"><a href="#cb72-604" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 4 subsamples</span></span>
-<span id="cb72-607"><a href="#cb72-607" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-608"><a href="#cb72-608" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_4</span></span>
-<span id="cb72-609"><a href="#cb72-609" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-610"><a href="#cb72-610" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-611"><a href="#cb72-611" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">4</span>)</span>
-<span id="cb72-612"><a href="#cb72-612" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-613"><a href="#cb72-613" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-603"><a href="#cb72-603" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 7 subsamples</span></span>
+<span id="cb72-606"><a href="#cb72-606" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-607"><a href="#cb72-607" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_7</span></span>
+<span id="cb72-608"><a href="#cb72-608" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-609"><a href="#cb72-609" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-610"><a href="#cb72-610" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">7</span>)</span>
+<span id="cb72-611"><a href="#cb72-611" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-612"><a href="#cb72-612" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-613"><a href="#cb72-613" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-614"><a href="#cb72-614" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-615"><a href="#cb72-615" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 3 subsample</span></span>
+<span id="cb72-615"><a href="#cb72-615" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 4 subsamples</span></span>
 <span id="cb72-618"><a href="#cb72-618" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-619"><a href="#cb72-619" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_3</span></span>
+<span id="cb72-619"><a href="#cb72-619" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_4</span></span>
 <span id="cb72-620"><a href="#cb72-620" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-621"><a href="#cb72-621" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-622"><a href="#cb72-622" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">3</span>)</span>
+<span id="cb72-621"><a href="#cb72-621" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-622"><a href="#cb72-622" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">4</span>)</span>
 <span id="cb72-623"><a href="#cb72-623" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-624"><a href="#cb72-624" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb72-625"><a href="#cb72-625" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-626"><a href="#cb72-626" aria-hidden="true" tabindex="-1"></a><span class="fu">### Avery Brook Bridge</span></span>
+<span id="cb72-626"><a href="#cb72-626" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 3 subsample</span></span>
 <span id="cb72-629"><a href="#cb72-629" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-630"><a href="#cb72-630" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: AB_data</span></span>
+<span id="cb72-630"><a href="#cb72-630" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_3</span></span>
 <span id="cb72-631"><a href="#cb72-631" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-632"><a href="#cb72-632" aria-hidden="true" tabindex="-1"></a>dAB <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">filter</span>(station_name <span class="sc">==</span> <span class="st">"Avery Brook_Bridge_01171000"</span>) </span>
-<span id="cb72-633"><a href="#cb72-633" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-632"><a href="#cb72-632" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-633"><a href="#cb72-633" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dWB0, <span class="dv">3</span>)</span>
 <span id="cb72-634"><a href="#cb72-634" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-635"><a href="#cb72-635" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 100 samples  </span></span>
-<span id="cb72-636"><a href="#cb72-636" aria-hidden="true" tabindex="-1"></a>First set of graphs does not include min/max flow anchors, second set does.</span>
-<span id="cb72-639"><a href="#cb72-639" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-640"><a href="#cb72-640" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_100_dAB</span></span>
-<span id="cb72-641"><a href="#cb72-641" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-642"><a href="#cb72-642" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-643"><a href="#cb72-643" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">100</span>, <span class="at">base_size_in =</span> <span class="dv">10</span>)</span>
-<span id="cb72-644"><a href="#cb72-644" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-645"><a href="#cb72-645" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb72-646"><a href="#cb72-646" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-647"><a href="#cb72-647" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 10 subsamples</span></span>
+<span id="cb72-635"><a href="#cb72-635" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-636"><a href="#cb72-636" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-637"><a href="#cb72-637" aria-hidden="true" tabindex="-1"></a><span class="fu">### Avery Brook Bridge</span></span>
+<span id="cb72-640"><a href="#cb72-640" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-641"><a href="#cb72-641" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: AB_data</span></span>
+<span id="cb72-642"><a href="#cb72-642" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-643"><a href="#cb72-643" aria-hidden="true" tabindex="-1"></a>dAB <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">filter</span>(station_name <span class="sc">==</span> <span class="st">"Avery Brook_Bridge_01171000"</span>) </span>
+<span id="cb72-644"><a href="#cb72-644" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-645"><a href="#cb72-645" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-646"><a href="#cb72-646" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 100 samples  </span></span>
+<span id="cb72-647"><a href="#cb72-647" aria-hidden="true" tabindex="-1"></a>First set of graphs does not include min/max flow anchors, second set does.</span>
 <span id="cb72-650"><a href="#cb72-650" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-651"><a href="#cb72-651" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_10_dAB</span></span>
+<span id="cb72-651"><a href="#cb72-651" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_100_dAB</span></span>
 <span id="cb72-652"><a href="#cb72-652" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-653"><a href="#cb72-653" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-654"><a href="#cb72-654" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">10</span>, <span class="at">base_size_in =</span> <span class="dv">8</span>)</span>
+<span id="cb72-653"><a href="#cb72-653" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-654"><a href="#cb72-654" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">100</span>, <span class="at">base_size_in =</span> <span class="dv">10</span>)</span>
 <span id="cb72-655"><a href="#cb72-655" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-656"><a href="#cb72-656" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb72-657"><a href="#cb72-657" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-658"><a href="#cb72-658" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 7 subsamples</span></span>
+<span id="cb72-658"><a href="#cb72-658" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 10 subsamples</span></span>
 <span id="cb72-661"><a href="#cb72-661" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-662"><a href="#cb72-662" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_7_dAB</span></span>
+<span id="cb72-662"><a href="#cb72-662" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_10_dAB</span></span>
 <span id="cb72-663"><a href="#cb72-663" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-664"><a href="#cb72-664" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-665"><a href="#cb72-665" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">7</span>)</span>
+<span id="cb72-664"><a href="#cb72-664" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-665"><a href="#cb72-665" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">10</span>, <span class="at">base_size_in =</span> <span class="dv">8</span>)</span>
 <span id="cb72-666"><a href="#cb72-666" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-667"><a href="#cb72-667" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb72-668"><a href="#cb72-668" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-669"><a href="#cb72-669" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-670"><a href="#cb72-670" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 4 subsamples</span></span>
-<span id="cb72-673"><a href="#cb72-673" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-674"><a href="#cb72-674" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_4_dAB</span></span>
-<span id="cb72-675"><a href="#cb72-675" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-676"><a href="#cb72-676" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-677"><a href="#cb72-677" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">4</span>)</span>
-<span id="cb72-678"><a href="#cb72-678" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-679"><a href="#cb72-679" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-669"><a href="#cb72-669" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 7 subsamples</span></span>
+<span id="cb72-672"><a href="#cb72-672" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-673"><a href="#cb72-673" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_7_dAB</span></span>
+<span id="cb72-674"><a href="#cb72-674" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-675"><a href="#cb72-675" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-676"><a href="#cb72-676" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">7</span>)</span>
+<span id="cb72-677"><a href="#cb72-677" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-678"><a href="#cb72-678" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-679"><a href="#cb72-679" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-680"><a href="#cb72-680" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-681"><a href="#cb72-681" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 3 subsample</span></span>
+<span id="cb72-681"><a href="#cb72-681" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 4 subsamples</span></span>
 <span id="cb72-684"><a href="#cb72-684" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-685"><a href="#cb72-685" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_3_dAB</span></span>
+<span id="cb72-685"><a href="#cb72-685" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_4_dAB</span></span>
 <span id="cb72-686"><a href="#cb72-686" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-687"><a href="#cb72-687" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-688"><a href="#cb72-688" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">3</span>)</span>
+<span id="cb72-687"><a href="#cb72-687" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-688"><a href="#cb72-688" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">4</span>)</span>
 <span id="cb72-689"><a href="#cb72-689" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-690"><a href="#cb72-690" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb72-691"><a href="#cb72-691" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-692"><a href="#cb72-692" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-693"><a href="#cb72-693" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-694"><a href="#cb72-694" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb72-695"><a href="#cb72-695" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-696"><a href="#cb72-696" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-692"><a href="#cb72-692" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 3 subsample</span></span>
+<span id="cb72-695"><a href="#cb72-695" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-696"><a href="#cb72-696" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotSubSample_3_dAB</span></span>
 <span id="cb72-697"><a href="#cb72-697" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-698"><a href="#cb72-698" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-701"><a href="#cb72-701" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb72-702"><a href="#cb72-702" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
-<span id="cb72-703"><a href="#cb72-703" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs)</span>
+<span id="cb72-698"><a href="#cb72-698" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb72-699"><a href="#cb72-699" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSubSample</span>(dAB, <span class="dv">3</span>)</span>
+<span id="cb72-700"><a href="#cb72-700" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-701"><a href="#cb72-701" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-702"><a href="#cb72-702" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-703"><a href="#cb72-703" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-704"><a href="#cb72-704" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-705"><a href="#cb72-705" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-706"><a href="#cb72-706" aria-hidden="true" tabindex="-1"></a>relFlow_WB0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb72-707"><a href="#cb72-707" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> dWB0<span class="sc">$</span>rank_pred, </span>
-<span id="cb72-708"><a href="#cb72-708" aria-hidden="true" tabindex="-1"></a>  <span class="at">ecdf =</span> <span class="fu">fn_ecdf_WB0</span>(dWB0<span class="sc">$</span>rank_pred)</span>
-<span id="cb72-709"><a href="#cb72-709" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb72-710"><a href="#cb72-710" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb72-711"><a href="#cb72-711" aria-hidden="true" tabindex="-1"></a>    <span class="at">value0_100 =</span> (value <span class="sc">-</span> <span class="fu">min</span>(value)) <span class="sc">/</span> (<span class="fu">max</span>(value) <span class="sc">-</span> <span class="fu">min</span>(value))</span>
-<span id="cb72-712"><a href="#cb72-712" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb72-713"><a href="#cb72-713" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-714"><a href="#cb72-714" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-715"><a href="#cb72-715" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(relFlow_WB0, <span class="fu">aes</span>(value0_100, ecdf)) <span class="sc">+</span></span>
-<span id="cb72-716"><a href="#cb72-716" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb72-717"><a href="#cb72-717" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Relative flow from FPE scores"</span>) <span class="sc">+</span></span>
-<span id="cb72-718"><a href="#cb72-718" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span>
-<span id="cb72-719"><a href="#cb72-719" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-720"><a href="#cb72-720" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb72-705"><a href="#cb72-705" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb72-706"><a href="#cb72-706" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-707"><a href="#cb72-707" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-708"><a href="#cb72-708" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-709"><a href="#cb72-709" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-712"><a href="#cb72-712" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb72-713"><a href="#cb72-713" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
+<span id="cb72-714"><a href="#cb72-714" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs)</span>
+<span id="cb72-715"><a href="#cb72-715" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-716"><a href="#cb72-716" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-717"><a href="#cb72-717" aria-hidden="true" tabindex="-1"></a>relFlow_WB0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb72-718"><a href="#cb72-718" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> dWB0<span class="sc">$</span>rank_pred, </span>
+<span id="cb72-719"><a href="#cb72-719" aria-hidden="true" tabindex="-1"></a>  <span class="at">ecdf =</span> <span class="fu">fn_ecdf_WB0</span>(dWB0<span class="sc">$</span>rank_pred)</span>
+<span id="cb72-720"><a href="#cb72-720" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb72-721"><a href="#cb72-721" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb72-722"><a href="#cb72-722" aria-hidden="true" tabindex="-1"></a>    <span class="at">value0_100 =</span> (value <span class="sc">-</span> <span class="fu">min</span>(value)) <span class="sc">/</span> (<span class="fu">max</span>(value) <span class="sc">-</span> <span class="fu">min</span>(value))</span>
+<span id="cb72-723"><a href="#cb72-723" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb72-724"><a href="#cb72-724" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-725"><a href="#cb72-725" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-726"><a href="#cb72-726" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(relFlow_WB0, <span class="fu">aes</span>(value0_100, ecdf)) <span class="sc">+</span></span>
+<span id="cb72-727"><a href="#cb72-727" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb72-728"><a href="#cb72-728" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Relative flow from FPE scores"</span>) <span class="sc">+</span></span>
+<span id="cb72-729"><a href="#cb72-729" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span>
+<span id="cb72-730"><a href="#cb72-730" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-731"><a href="#cb72-731" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

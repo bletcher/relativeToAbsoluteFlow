@@ -505,10 +505,21 @@ plotSubSample <- function(dIn0, numSample, num_pred_points = 100, base_size_in =
   # with anchors  
   
   # add in min and max flow samples for anchors
+  # 
+  get_quantile_value <- function(d, quant) {
+     q <- quantile(d, quant) 
+     row_n <-  min(which(abs(d - q) == min(abs(d - q)))) # min to get 'unique' row number
+     return(d[row_n])
+  }
+
   dInSample_with_anchors <- rbind(
     dInSample, 
-    dIn |> filter(flow_cfs_log10_scaled == max(flow_cfs_log10_scaled)) |> filter(score_scaled == max(score_scaled)),
-    dIn |> filter(flow_cfs_log10_scaled == min(flow_cfs_log10_scaled)) |> filter(score_scaled == min(score_scaled))
+    dIn |> 
+      filter(flow_cfs_log10_scaled == get_quantile_value(flow_cfs_log10_scaled, 0.01)) |> 
+      filter(score_scaled == get_quantile_value(score_scaled, 0.01)),
+    dIn |> 
+      filter(flow_cfs_log10_scaled == get_quantile_value(flow_cfs_log10_scaled, 0.99)) |> 
+      filter(score_scaled == get_quantile_value(score_scaled, 0.99))
   )
   
   # Observed data - these data are the same with or without anchors
@@ -550,8 +561,8 @@ First set of graphs does not include min/max flow anchors, second set does.
 ```{r}
 #| label: plotSubSample_100
 
-dummy <- 1
-plotSubSample(dWB0, 100, base_size_in = 10)
+dummy <- 2
+plotSubSample(dWB0, 100)
 
 ```
 
@@ -559,8 +570,8 @@ plotSubSample(dWB0, 100, base_size_in = 10)
 ```{r}
 #| label: plotSubSample_10
 
-dummy <- 1
-plotSubSample(dWB0, 10, base_size_in = 8)
+dummy <- 2
+plotSubSample(dWB0, 10)
 
 ```
 
@@ -568,7 +579,7 @@ plotSubSample(dWB0, 10, base_size_in = 8)
 ```{r}
 #| label: plotSubSample_7
 
-dummy <- 1
+dummy <- 2
 plotSubSample(dWB0, 7)
 
 ```
@@ -578,7 +589,7 @@ plotSubSample(dWB0, 7)
 ```{r}
 #| label: plotSubSample_4
 
-dummy <- 1
+dummy <- 2
 plotSubSample(dWB0, 4)
 
 ```
@@ -587,7 +598,7 @@ plotSubSample(dWB0, 4)
 ```{r}  
 #| label: plotSubSample_3
 
-dummy <- 1
+dummy <- 2
 plotSubSample(dWB0, 3)
 
 ```
@@ -604,7 +615,7 @@ First set of graphs does not include min/max flow anchors, second set does.
 ```{r}
 #| label: plotSubSample_100_dAB
 
-dummy <- 1
+dummy <- 2
 plotSubSample(dAB, 100, base_size_in = 10)
 
 ```
@@ -613,7 +624,7 @@ plotSubSample(dAB, 100, base_size_in = 10)
 ```{r}
 #| label: plotSubSample_10_dAB
 
-dummy <- 1
+dummy <- 2
 plotSubSample(dAB, 10, base_size_in = 8)
 
 ```
@@ -622,7 +633,7 @@ plotSubSample(dAB, 10, base_size_in = 8)
 ```{r}
 #| label: plotSubSample_7_dAB
 
-dummy <- 1
+dummy <- 2
 plotSubSample(dAB, 7)
 
 ```
@@ -632,7 +643,7 @@ plotSubSample(dAB, 7)
 ```{r}
 #| label: plotSubSample_4_dAB
 
-dummy <- 1
+dummy <- 2
 plotSubSample(dAB, 4)
 
 ```
@@ -641,7 +652,7 @@ plotSubSample(dAB, 4)
 ```{r}  
 #| label: plotSubSample_3_dAB
 
-dummy <- 1
+dummy <- 2
 plotSubSample(dAB, 3)
 
 ```
