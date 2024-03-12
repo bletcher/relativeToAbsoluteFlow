@@ -601,7 +601,7 @@ First set of graphs does not include min/max flow anchors, second set does.
 ```{r}
 #| label: plotSubSample_100
 
-dummy <- 3
+dummy <- 1
 plotSubSample(dWB0, 100, base_size_in = 10)
 
 ```
@@ -610,7 +610,7 @@ plotSubSample(dWB0, 100, base_size_in = 10)
 ```{r}
 #| label: plotSubSample_10
 
-dummy <- 3
+dummy <- 1
 plotSubSample(dWB0, 10, base_size_in = 8)
 
 ```
@@ -619,7 +619,7 @@ plotSubSample(dWB0, 10, base_size_in = 8)
 ```{r}
 #| label: plotSubSample_7
 
-dummy <- 3
+dummy <- 1
 plotSubSample(dWB0, 7)
 
 ```
@@ -629,7 +629,7 @@ plotSubSample(dWB0, 7)
 ```{r}
 #| label: plotSubSample_4
 
-dummy <- 3
+dummy <- 1
 plotSubSample(dWB0, 4)
 
 ```
@@ -638,7 +638,7 @@ plotSubSample(dWB0, 4)
 ```{r}  
 #| label: plotSubSample_3
 
-dummy <- 3
+dummy <- 1
 plotSubSample(dWB0, 3)
 
 ```
@@ -655,7 +655,7 @@ First set of graphs does not include min/max flow anchors, second set does.
 ```{r}
 #| label: plotSubSample_100_dAB
 
-dummy <- 2
+dummy <- 1
 plotSubSample(dAB, 100, base_size_in = 10)
 
 ```
@@ -664,7 +664,7 @@ plotSubSample(dAB, 100, base_size_in = 10)
 ```{r}
 #| label: plotSubSample_10_dAB
 
-dummy <- 2
+dummy <- 1
 plotSubSample(dAB, 10, base_size_in = 8)
 
 ```
@@ -673,7 +673,7 @@ plotSubSample(dAB, 10, base_size_in = 8)
 ```{r}
 #| label: plotSubSample_7_dAB
 
-dummy <- 2
+dummy <- 1
 plotSubSample(dAB, 7)
 
 ```
@@ -683,7 +683,7 @@ plotSubSample(dAB, 7)
 ```{r}
 #| label: plotSubSample_4_dAB
 
-dummy <- 2
+dummy <- 1
 plotSubSample(dAB, 4)
 
 ```
@@ -692,7 +692,7 @@ plotSubSample(dAB, 4)
 ```{r}  
 #| label: plotSubSample_3_dAB
 
-dummy <- 2
+dummy <- 1
 plotSubSample(dAB, 3)
 
 ```
