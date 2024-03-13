@@ -755,11 +755,12 @@ get_quantile_value_sim <- function(d, quant) {
 
 n_rep <- 100
 sim_diffs_out <- data.frame()
-
+dummy_sim <- 1
 
 for(s in unique(d2$station_name)) {
   for(anchor_tf in c(TRUE, FALSE)) {
-    for(n in c(100,50,10,8,6,4)) {
+    for(n in c(100,75,50,25,10,8,6,4,2)) {
+      #print(c(s,anchor_tf,n))
       for(rep in seq(1, n_rep)) {
        
         dIn <- d2 |> filter(station_name == s)
@@ -780,17 +781,18 @@ for(s in unique(d2$station_name)) {
           dInSample <- dInSample0
         }
         
-        dInSample_interp <- get_preds_interp_sim(dInSample, n)
-        area_diff_interp <- getECDF_diff(dIn$score_scaled_ecdf, dInSample_interp$y)
-        
-        dInSample_gam <- get_preds_gam_sim(dInSample, n)
-        area_diff_gam <- getECDF_diff(dIn$score_scaled_ecdf, dInSample_gam$y)
-        
-        sim_diffs_out <- bind_rows(
-          sim_diffs_out,
-          data.frame(station_name=s, anchor_tf=anchor_tf, n = n, rep = rep, area_diff_interp = area_diff_interp, area_diff_gam = area_diff_gam)
-        )
-        
+        if(n >= 4 | anchor_tf) {
+          dInSample_interp <- get_preds_interp_sim(dInSample, n)
+          area_diff_interp <- getECDF_diff(dIn$score_scaled_ecdf, dInSample_interp$y)
+          
+          dInSample_gam <- get_preds_gam_sim(dInSample, n)
+          area_diff_gam <- getECDF_diff(dIn$score_scaled_ecdf, dInSample_gam$y)
+          
+          sim_diffs_out <- bind_rows(
+            sim_diffs_out,
+            data.frame(station_name=s, anchor_tf=anchor_tf, n = n, rep = rep, area_diff_interp = area_diff_interp, area_diff_gam = area_diff_gam)
+          )
+        }
         #print(c(s,anchor_tf,n,rep))
       }
     }
@@ -804,13 +806,16 @@ for(s in unique(d2$station_name)) {
 #### Linear interpolation between flow points
 ```{r}
 #| label: graphAreaDiff_interp
-dummy <- 1
+dummy <- 2
 
 ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
-  geom_point() +
-  #geom_line() +
+  geom_jitter(width = 0.5) +
   geom_smooth(method = "gam", 
-              formula = y ~ s(x, bs = "cs", fx = TRUE, k = 3), se = FALSE) +
+              formula = y ~ s(x, bs = "cs", k = 3), se = FALSE) +
+  #geom_smooth(method = "lm", 
+  #            formula = y ~ x + I(x^2),  
+  #            se = FALSE) +
+  #scale_y_log10() +
   facet_wrap(~station_name, scales = "free") +
   theme_publication()
 
@@ -819,13 +824,12 @@ ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
 #### GAM fit across flow points
 ```{r}
 #| label: graphAreaDiff_gam
-dummy <- 1
+dummy <- 2
 
 ggplot(sim_diffs_out, aes(n, area_diff_gam, color = anchor_tf)) +
-  geom_point() +
-  #geom_line() +
+  geom_jitter(width = 0.5) +
   geom_smooth(method = "gam", 
-              formula = y ~ s(x, bs = "cs", fx = TRUE, k = 3), se = FALSE) +
+              formula = y ~ s(x, bs = "cs", k = 3), se = FALSE) +
   facet_wrap(~station_name, scales = "free") +
   theme_publication()
 

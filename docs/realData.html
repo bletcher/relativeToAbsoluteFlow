@@ -1869,47 +1869,49 @@ $figs_smoothed_data_with_anchors</code></pre>
 <span id="cb120-31"><a href="#cb120-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb120-32"><a href="#cb120-32" aria-hidden="true" tabindex="-1"></a>n_rep <span class="ot">&lt;-</span> <span class="dv">100</span></span>
 <span id="cb120-33"><a href="#cb120-33" aria-hidden="true" tabindex="-1"></a>sim_diffs_out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb120-34"><a href="#cb120-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-34"><a href="#cb120-34" aria-hidden="true" tabindex="-1"></a>dummy_sim <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb120-35"><a href="#cb120-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb120-36"><a href="#cb120-36" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(s <span class="cf">in</span> <span class="fu">unique</span>(d2<span class="sc">$</span>station_name)) {</span>
 <span id="cb120-37"><a href="#cb120-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(anchor_tf <span class="cf">in</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) {</span>
-<span id="cb120-38"><a href="#cb120-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(n <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">50</span>,<span class="dv">10</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">4</span>)) {</span>
-<span id="cb120-39"><a href="#cb120-39" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(rep <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>, n_rep)) {</span>
-<span id="cb120-40"><a href="#cb120-40" aria-hidden="true" tabindex="-1"></a>       </span>
-<span id="cb120-41"><a href="#cb120-41" aria-hidden="true" tabindex="-1"></a>        dIn <span class="ot">&lt;-</span> d2 <span class="sc">|&gt;</span> <span class="fu">filter</span>(station_name <span class="sc">==</span> s)</span>
-<span id="cb120-42"><a href="#cb120-42" aria-hidden="true" tabindex="-1"></a>        dInSample0 <span class="ot">&lt;-</span> <span class="fu">sample_n</span>(dIn, n) </span>
-<span id="cb120-43"><a href="#cb120-43" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb120-44"><a href="#cb120-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(anchor_tf) {</span>
-<span id="cb120-45"><a href="#cb120-45" aria-hidden="true" tabindex="-1"></a>            dInSample <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb120-46"><a href="#cb120-46" aria-hidden="true" tabindex="-1"></a>              dInSample0, </span>
-<span id="cb120-47"><a href="#cb120-47" aria-hidden="true" tabindex="-1"></a>              dIn <span class="sc">|&gt;</span> </span>
-<span id="cb120-48"><a href="#cb120-48" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(flow_cfs_log10_scaled, <span class="fl">0.01</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb120-49"><a href="#cb120-49" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(score_scaled, <span class="fl">0.01</span>)),</span>
-<span id="cb120-50"><a href="#cb120-50" aria-hidden="true" tabindex="-1"></a>              dIn <span class="sc">|&gt;</span> </span>
-<span id="cb120-51"><a href="#cb120-51" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(flow_cfs_log10_scaled, <span class="fl">0.99</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb120-52"><a href="#cb120-52" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(score_scaled, <span class="fl">0.99</span>))</span>
-<span id="cb120-53"><a href="#cb120-53" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb120-54"><a href="#cb120-54" aria-hidden="true" tabindex="-1"></a>        } </span>
-<span id="cb120-55"><a href="#cb120-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span> {</span>
-<span id="cb120-56"><a href="#cb120-56" aria-hidden="true" tabindex="-1"></a>          dInSample <span class="ot">&lt;-</span> dInSample0</span>
-<span id="cb120-57"><a href="#cb120-57" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb120-58"><a href="#cb120-58" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb120-59"><a href="#cb120-59" aria-hidden="true" tabindex="-1"></a>        dInSample_interp <span class="ot">&lt;-</span> <span class="fu">get_preds_interp_sim</span>(dInSample, n)</span>
-<span id="cb120-60"><a href="#cb120-60" aria-hidden="true" tabindex="-1"></a>        area_diff_interp <span class="ot">&lt;-</span> <span class="fu">getECDF_diff</span>(dIn<span class="sc">$</span>score_scaled_ecdf, dInSample_interp<span class="sc">$</span>y)</span>
-<span id="cb120-61"><a href="#cb120-61" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb120-62"><a href="#cb120-62" aria-hidden="true" tabindex="-1"></a>        dInSample_gam <span class="ot">&lt;-</span> <span class="fu">get_preds_gam_sim</span>(dInSample, n)</span>
-<span id="cb120-63"><a href="#cb120-63" aria-hidden="true" tabindex="-1"></a>        area_diff_gam <span class="ot">&lt;-</span> <span class="fu">getECDF_diff</span>(dIn<span class="sc">$</span>score_scaled_ecdf, dInSample_gam<span class="sc">$</span>y)</span>
-<span id="cb120-64"><a href="#cb120-64" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb120-65"><a href="#cb120-65" aria-hidden="true" tabindex="-1"></a>        sim_diffs_out <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb120-66"><a href="#cb120-66" aria-hidden="true" tabindex="-1"></a>          sim_diffs_out,</span>
-<span id="cb120-67"><a href="#cb120-67" aria-hidden="true" tabindex="-1"></a>          <span class="fu">data.frame</span>(<span class="at">station_name=</span>s, <span class="at">anchor_tf=</span>anchor_tf, <span class="at">n =</span> n, <span class="at">rep =</span> rep, <span class="at">area_diff_interp =</span> area_diff_interp, <span class="at">area_diff_gam =</span> area_diff_gam)</span>
-<span id="cb120-68"><a href="#cb120-68" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb120-69"><a href="#cb120-69" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb120-70"><a href="#cb120-70" aria-hidden="true" tabindex="-1"></a>        <span class="co">#print(c(s,anchor_tf,n,rep))</span></span>
-<span id="cb120-71"><a href="#cb120-71" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb120-72"><a href="#cb120-72" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb120-73"><a href="#cb120-73" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb120-74"><a href="#cb120-74" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb120-38"><a href="#cb120-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(n <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">75</span>,<span class="dv">50</span>,<span class="dv">25</span>,<span class="dv">10</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">4</span>,<span class="dv">2</span>)) {</span>
+<span id="cb120-39"><a href="#cb120-39" aria-hidden="true" tabindex="-1"></a>      <span class="co">#print(c(s,anchor_tf,n))</span></span>
+<span id="cb120-40"><a href="#cb120-40" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(rep <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>, n_rep)) {</span>
+<span id="cb120-41"><a href="#cb120-41" aria-hidden="true" tabindex="-1"></a>       </span>
+<span id="cb120-42"><a href="#cb120-42" aria-hidden="true" tabindex="-1"></a>        dIn <span class="ot">&lt;-</span> d2 <span class="sc">|&gt;</span> <span class="fu">filter</span>(station_name <span class="sc">==</span> s)</span>
+<span id="cb120-43"><a href="#cb120-43" aria-hidden="true" tabindex="-1"></a>        dInSample0 <span class="ot">&lt;-</span> <span class="fu">sample_n</span>(dIn, n) </span>
+<span id="cb120-44"><a href="#cb120-44" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb120-45"><a href="#cb120-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(anchor_tf) {</span>
+<span id="cb120-46"><a href="#cb120-46" aria-hidden="true" tabindex="-1"></a>            dInSample <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb120-47"><a href="#cb120-47" aria-hidden="true" tabindex="-1"></a>              dInSample0, </span>
+<span id="cb120-48"><a href="#cb120-48" aria-hidden="true" tabindex="-1"></a>              dIn <span class="sc">|&gt;</span> </span>
+<span id="cb120-49"><a href="#cb120-49" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(flow_cfs_log10_scaled, <span class="fl">0.01</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb120-50"><a href="#cb120-50" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(score_scaled, <span class="fl">0.01</span>)),</span>
+<span id="cb120-51"><a href="#cb120-51" aria-hidden="true" tabindex="-1"></a>              dIn <span class="sc">|&gt;</span> </span>
+<span id="cb120-52"><a href="#cb120-52" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(flow_cfs_log10_scaled, <span class="fl">0.99</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb120-53"><a href="#cb120-53" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(score_scaled, <span class="fl">0.99</span>))</span>
+<span id="cb120-54"><a href="#cb120-54" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb120-55"><a href="#cb120-55" aria-hidden="true" tabindex="-1"></a>        } </span>
+<span id="cb120-56"><a href="#cb120-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span> {</span>
+<span id="cb120-57"><a href="#cb120-57" aria-hidden="true" tabindex="-1"></a>          dInSample <span class="ot">&lt;-</span> dInSample0</span>
+<span id="cb120-58"><a href="#cb120-58" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb120-59"><a href="#cb120-59" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb120-60"><a href="#cb120-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(n <span class="sc">&gt;=</span> <span class="dv">4</span> <span class="sc">|</span> anchor_tf) {</span>
+<span id="cb120-61"><a href="#cb120-61" aria-hidden="true" tabindex="-1"></a>          dInSample_interp <span class="ot">&lt;-</span> <span class="fu">get_preds_interp_sim</span>(dInSample, n)</span>
+<span id="cb120-62"><a href="#cb120-62" aria-hidden="true" tabindex="-1"></a>          area_diff_interp <span class="ot">&lt;-</span> <span class="fu">getECDF_diff</span>(dIn<span class="sc">$</span>score_scaled_ecdf, dInSample_interp<span class="sc">$</span>y)</span>
+<span id="cb120-63"><a href="#cb120-63" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb120-64"><a href="#cb120-64" aria-hidden="true" tabindex="-1"></a>          dInSample_gam <span class="ot">&lt;-</span> <span class="fu">get_preds_gam_sim</span>(dInSample, n)</span>
+<span id="cb120-65"><a href="#cb120-65" aria-hidden="true" tabindex="-1"></a>          area_diff_gam <span class="ot">&lt;-</span> <span class="fu">getECDF_diff</span>(dIn<span class="sc">$</span>score_scaled_ecdf, dInSample_gam<span class="sc">$</span>y)</span>
+<span id="cb120-66"><a href="#cb120-66" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb120-67"><a href="#cb120-67" aria-hidden="true" tabindex="-1"></a>          sim_diffs_out <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb120-68"><a href="#cb120-68" aria-hidden="true" tabindex="-1"></a>            sim_diffs_out,</span>
+<span id="cb120-69"><a href="#cb120-69" aria-hidden="true" tabindex="-1"></a>            <span class="fu">data.frame</span>(<span class="at">station_name=</span>s, <span class="at">anchor_tf=</span>anchor_tf, <span class="at">n =</span> n, <span class="at">rep =</span> rep, <span class="at">area_diff_interp =</span> area_diff_interp, <span class="at">area_diff_gam =</span> area_diff_gam)</span>
+<span id="cb120-70"><a href="#cb120-70" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb120-71"><a href="#cb120-71" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb120-72"><a href="#cb120-72" aria-hidden="true" tabindex="-1"></a>        <span class="co">#print(c(s,anchor_tf,n,rep))</span></span>
+<span id="cb120-73"><a href="#cb120-73" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb120-74"><a href="#cb120-74" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb120-75"><a href="#cb120-75" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb120-76"><a href="#cb120-76" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="graph-area-differences" class="level3" data-number="2.6.1">
@@ -1919,15 +1921,18 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_interp, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_line() +</span></span>
-<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
-<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">fx =</span> <span class="cn">TRUE</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb121-8"><a href="#cb121-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb121-9"><a href="#cb121-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_smooth(method = "lm", </span></span>
+<span id="cb121-8"><a href="#cb121-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#            formula = y ~ x + I(x^2),  </span></span>
+<span id="cb121-9"><a href="#cb121-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#            se = FALSE) +</span></span>
+<span id="cb121-10"><a href="#cb121-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_y_log10() +</span></span>
+<span id="cb121-11"><a href="#cb121-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb121-12"><a href="#cb121-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1943,15 +1948,14 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_gam, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
-<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_line() +</span></span>
-<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
-<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">fx =</span> <span class="cn">TRUE</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb122-8"><a href="#cb122-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb122-9"><a href="#cb122-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
+<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb122-8"><a href="#cb122-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3475,148 +3479,152 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-834"><a href="#cb132-834" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-835"><a href="#cb132-835" aria-hidden="true" tabindex="-1"></a>n_rep <span class="ot">&lt;-</span> <span class="dv">100</span></span>
 <span id="cb132-836"><a href="#cb132-836" aria-hidden="true" tabindex="-1"></a>sim_diffs_out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb132-837"><a href="#cb132-837" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-837"><a href="#cb132-837" aria-hidden="true" tabindex="-1"></a>dummy_sim <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb132-838"><a href="#cb132-838" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-839"><a href="#cb132-839" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(s <span class="cf">in</span> <span class="fu">unique</span>(d2<span class="sc">$</span>station_name)) {</span>
 <span id="cb132-840"><a href="#cb132-840" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(anchor_tf <span class="cf">in</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) {</span>
-<span id="cb132-841"><a href="#cb132-841" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(n <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">50</span>,<span class="dv">10</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">4</span>)) {</span>
-<span id="cb132-842"><a href="#cb132-842" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(rep <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>, n_rep)) {</span>
-<span id="cb132-843"><a href="#cb132-843" aria-hidden="true" tabindex="-1"></a>       </span>
-<span id="cb132-844"><a href="#cb132-844" aria-hidden="true" tabindex="-1"></a>        dIn <span class="ot">&lt;-</span> d2 <span class="sc">|&gt;</span> <span class="fu">filter</span>(station_name <span class="sc">==</span> s)</span>
-<span id="cb132-845"><a href="#cb132-845" aria-hidden="true" tabindex="-1"></a>        dInSample0 <span class="ot">&lt;-</span> <span class="fu">sample_n</span>(dIn, n) </span>
-<span id="cb132-846"><a href="#cb132-846" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb132-847"><a href="#cb132-847" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(anchor_tf) {</span>
-<span id="cb132-848"><a href="#cb132-848" aria-hidden="true" tabindex="-1"></a>            dInSample <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb132-849"><a href="#cb132-849" aria-hidden="true" tabindex="-1"></a>              dInSample0, </span>
-<span id="cb132-850"><a href="#cb132-850" aria-hidden="true" tabindex="-1"></a>              dIn <span class="sc">|&gt;</span> </span>
-<span id="cb132-851"><a href="#cb132-851" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(flow_cfs_log10_scaled, <span class="fl">0.01</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb132-852"><a href="#cb132-852" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(score_scaled, <span class="fl">0.01</span>)),</span>
-<span id="cb132-853"><a href="#cb132-853" aria-hidden="true" tabindex="-1"></a>              dIn <span class="sc">|&gt;</span> </span>
-<span id="cb132-854"><a href="#cb132-854" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(flow_cfs_log10_scaled, <span class="fl">0.99</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb132-855"><a href="#cb132-855" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(score_scaled, <span class="fl">0.99</span>))</span>
-<span id="cb132-856"><a href="#cb132-856" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb132-857"><a href="#cb132-857" aria-hidden="true" tabindex="-1"></a>        } </span>
-<span id="cb132-858"><a href="#cb132-858" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span> {</span>
-<span id="cb132-859"><a href="#cb132-859" aria-hidden="true" tabindex="-1"></a>          dInSample <span class="ot">&lt;-</span> dInSample0</span>
-<span id="cb132-860"><a href="#cb132-860" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb132-861"><a href="#cb132-861" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb132-862"><a href="#cb132-862" aria-hidden="true" tabindex="-1"></a>        dInSample_interp <span class="ot">&lt;-</span> <span class="fu">get_preds_interp_sim</span>(dInSample, n)</span>
-<span id="cb132-863"><a href="#cb132-863" aria-hidden="true" tabindex="-1"></a>        area_diff_interp <span class="ot">&lt;-</span> <span class="fu">getECDF_diff</span>(dIn<span class="sc">$</span>score_scaled_ecdf, dInSample_interp<span class="sc">$</span>y)</span>
-<span id="cb132-864"><a href="#cb132-864" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb132-865"><a href="#cb132-865" aria-hidden="true" tabindex="-1"></a>        dInSample_gam <span class="ot">&lt;-</span> <span class="fu">get_preds_gam_sim</span>(dInSample, n)</span>
-<span id="cb132-866"><a href="#cb132-866" aria-hidden="true" tabindex="-1"></a>        area_diff_gam <span class="ot">&lt;-</span> <span class="fu">getECDF_diff</span>(dIn<span class="sc">$</span>score_scaled_ecdf, dInSample_gam<span class="sc">$</span>y)</span>
-<span id="cb132-867"><a href="#cb132-867" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb132-868"><a href="#cb132-868" aria-hidden="true" tabindex="-1"></a>        sim_diffs_out <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb132-869"><a href="#cb132-869" aria-hidden="true" tabindex="-1"></a>          sim_diffs_out,</span>
-<span id="cb132-870"><a href="#cb132-870" aria-hidden="true" tabindex="-1"></a>          <span class="fu">data.frame</span>(<span class="at">station_name=</span>s, <span class="at">anchor_tf=</span>anchor_tf, <span class="at">n =</span> n, <span class="at">rep =</span> rep, <span class="at">area_diff_interp =</span> area_diff_interp, <span class="at">area_diff_gam =</span> area_diff_gam)</span>
-<span id="cb132-871"><a href="#cb132-871" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb132-872"><a href="#cb132-872" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb132-873"><a href="#cb132-873" aria-hidden="true" tabindex="-1"></a>        <span class="co">#print(c(s,anchor_tf,n,rep))</span></span>
-<span id="cb132-874"><a href="#cb132-874" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb132-875"><a href="#cb132-875" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb132-876"><a href="#cb132-876" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb132-877"><a href="#cb132-877" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb132-878"><a href="#cb132-878" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-879"><a href="#cb132-879" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-880"><a href="#cb132-880" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb132-841"><a href="#cb132-841" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(n <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">75</span>,<span class="dv">50</span>,<span class="dv">25</span>,<span class="dv">10</span>,<span class="dv">8</span>,<span class="dv">6</span>,<span class="dv">4</span>,<span class="dv">2</span>)) {</span>
+<span id="cb132-842"><a href="#cb132-842" aria-hidden="true" tabindex="-1"></a>      <span class="co">#print(c(s,anchor_tf,n))</span></span>
+<span id="cb132-843"><a href="#cb132-843" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(rep <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">1</span>, n_rep)) {</span>
+<span id="cb132-844"><a href="#cb132-844" aria-hidden="true" tabindex="-1"></a>       </span>
+<span id="cb132-845"><a href="#cb132-845" aria-hidden="true" tabindex="-1"></a>        dIn <span class="ot">&lt;-</span> d2 <span class="sc">|&gt;</span> <span class="fu">filter</span>(station_name <span class="sc">==</span> s)</span>
+<span id="cb132-846"><a href="#cb132-846" aria-hidden="true" tabindex="-1"></a>        dInSample0 <span class="ot">&lt;-</span> <span class="fu">sample_n</span>(dIn, n) </span>
+<span id="cb132-847"><a href="#cb132-847" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb132-848"><a href="#cb132-848" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(anchor_tf) {</span>
+<span id="cb132-849"><a href="#cb132-849" aria-hidden="true" tabindex="-1"></a>            dInSample <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb132-850"><a href="#cb132-850" aria-hidden="true" tabindex="-1"></a>              dInSample0, </span>
+<span id="cb132-851"><a href="#cb132-851" aria-hidden="true" tabindex="-1"></a>              dIn <span class="sc">|&gt;</span> </span>
+<span id="cb132-852"><a href="#cb132-852" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(flow_cfs_log10_scaled, <span class="fl">0.01</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb132-853"><a href="#cb132-853" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(score_scaled, <span class="fl">0.01</span>)),</span>
+<span id="cb132-854"><a href="#cb132-854" aria-hidden="true" tabindex="-1"></a>              dIn <span class="sc">|&gt;</span> </span>
+<span id="cb132-855"><a href="#cb132-855" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(flow_cfs_log10_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(flow_cfs_log10_scaled, <span class="fl">0.99</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb132-856"><a href="#cb132-856" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(score_scaled <span class="sc">==</span> <span class="fu">get_quantile_value_sim</span>(score_scaled, <span class="fl">0.99</span>))</span>
+<span id="cb132-857"><a href="#cb132-857" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb132-858"><a href="#cb132-858" aria-hidden="true" tabindex="-1"></a>        } </span>
+<span id="cb132-859"><a href="#cb132-859" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span> {</span>
+<span id="cb132-860"><a href="#cb132-860" aria-hidden="true" tabindex="-1"></a>          dInSample <span class="ot">&lt;-</span> dInSample0</span>
+<span id="cb132-861"><a href="#cb132-861" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb132-862"><a href="#cb132-862" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb132-863"><a href="#cb132-863" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(n <span class="sc">&gt;=</span> <span class="dv">4</span> <span class="sc">|</span> anchor_tf) {</span>
+<span id="cb132-864"><a href="#cb132-864" aria-hidden="true" tabindex="-1"></a>          dInSample_interp <span class="ot">&lt;-</span> <span class="fu">get_preds_interp_sim</span>(dInSample, n)</span>
+<span id="cb132-865"><a href="#cb132-865" aria-hidden="true" tabindex="-1"></a>          area_diff_interp <span class="ot">&lt;-</span> <span class="fu">getECDF_diff</span>(dIn<span class="sc">$</span>score_scaled_ecdf, dInSample_interp<span class="sc">$</span>y)</span>
+<span id="cb132-866"><a href="#cb132-866" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb132-867"><a href="#cb132-867" aria-hidden="true" tabindex="-1"></a>          dInSample_gam <span class="ot">&lt;-</span> <span class="fu">get_preds_gam_sim</span>(dInSample, n)</span>
+<span id="cb132-868"><a href="#cb132-868" aria-hidden="true" tabindex="-1"></a>          area_diff_gam <span class="ot">&lt;-</span> <span class="fu">getECDF_diff</span>(dIn<span class="sc">$</span>score_scaled_ecdf, dInSample_gam<span class="sc">$</span>y)</span>
+<span id="cb132-869"><a href="#cb132-869" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb132-870"><a href="#cb132-870" aria-hidden="true" tabindex="-1"></a>          sim_diffs_out <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb132-871"><a href="#cb132-871" aria-hidden="true" tabindex="-1"></a>            sim_diffs_out,</span>
+<span id="cb132-872"><a href="#cb132-872" aria-hidden="true" tabindex="-1"></a>            <span class="fu">data.frame</span>(<span class="at">station_name=</span>s, <span class="at">anchor_tf=</span>anchor_tf, <span class="at">n =</span> n, <span class="at">rep =</span> rep, <span class="at">area_diff_interp =</span> area_diff_interp, <span class="at">area_diff_gam =</span> area_diff_gam)</span>
+<span id="cb132-873"><a href="#cb132-873" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb132-874"><a href="#cb132-874" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb132-875"><a href="#cb132-875" aria-hidden="true" tabindex="-1"></a>        <span class="co">#print(c(s,anchor_tf,n,rep))</span></span>
+<span id="cb132-876"><a href="#cb132-876" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb132-877"><a href="#cb132-877" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb132-878"><a href="#cb132-878" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb132-879"><a href="#cb132-879" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb132-880"><a href="#cb132-880" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-881"><a href="#cb132-881" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-882"><a href="#cb132-882" aria-hidden="true" tabindex="-1"></a><span class="fu">### Graph area differences</span></span>
-<span id="cb132-883"><a href="#cb132-883" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Linear interpolation between flow points</span></span>
-<span id="cb132-886"><a href="#cb132-886" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb132-887"><a href="#cb132-887" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: graphAreaDiff_interp</span></span>
-<span id="cb132-888"><a href="#cb132-888" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb132-889"><a href="#cb132-889" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-890"><a href="#cb132-890" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_interp, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
-<span id="cb132-891"><a href="#cb132-891" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb132-892"><a href="#cb132-892" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_line() +</span></span>
-<span id="cb132-893"><a href="#cb132-893" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
-<span id="cb132-894"><a href="#cb132-894" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">fx =</span> <span class="cn">TRUE</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb132-895"><a href="#cb132-895" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb132-896"><a href="#cb132-896" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span>
-<span id="cb132-897"><a href="#cb132-897" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-898"><a href="#cb132-898" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb132-899"><a href="#cb132-899" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-900"><a href="#cb132-900" aria-hidden="true" tabindex="-1"></a><span class="fu">#### GAM fit across flow points</span></span>
-<span id="cb132-903"><a href="#cb132-903" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb132-904"><a href="#cb132-904" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: graphAreaDiff_gam</span></span>
-<span id="cb132-905"><a href="#cb132-905" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb132-906"><a href="#cb132-906" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-907"><a href="#cb132-907" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_gam, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
-<span id="cb132-908"><a href="#cb132-908" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb132-909"><a href="#cb132-909" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_line() +</span></span>
-<span id="cb132-910"><a href="#cb132-910" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
-<span id="cb132-911"><a href="#cb132-911" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">fx =</span> <span class="cn">TRUE</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb132-912"><a href="#cb132-912" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb132-913"><a href="#cb132-913" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span>
-<span id="cb132-914"><a href="#cb132-914" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-915"><a href="#cb132-915" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb132-916"><a href="#cb132-916" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-917"><a href="#cb132-917" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-920"><a href="#cb132-920" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb132-921"><a href="#cb132-921" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
-<span id="cb132-922"><a href="#cb132-922" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs)</span>
-<span id="cb132-923"><a href="#cb132-923" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-924"><a href="#cb132-924" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-925"><a href="#cb132-925" aria-hidden="true" tabindex="-1"></a>relFlow_WB0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb132-926"><a href="#cb132-926" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> dWB0<span class="sc">$</span>rank_pred, </span>
-<span id="cb132-927"><a href="#cb132-927" aria-hidden="true" tabindex="-1"></a>  <span class="at">ecdf =</span> <span class="fu">getECDF</span>(dWB0<span class="sc">$</span>rank_pred)</span>
-<span id="cb132-928"><a href="#cb132-928" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb132-929"><a href="#cb132-929" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb132-930"><a href="#cb132-930" aria-hidden="true" tabindex="-1"></a>    <span class="at">value0_100 =</span> (value <span class="sc">-</span> <span class="fu">min</span>(value)) <span class="sc">/</span> (<span class="fu">max</span>(value) <span class="sc">-</span> <span class="fu">min</span>(value))</span>
-<span id="cb132-931"><a href="#cb132-931" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb132-932"><a href="#cb132-932" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-933"><a href="#cb132-933" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-934"><a href="#cb132-934" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(relFlow_WB0, <span class="fu">aes</span>(value0_100, ecdf)) <span class="sc">+</span></span>
-<span id="cb132-935"><a href="#cb132-935" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb132-936"><a href="#cb132-936" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Relative flow from FPE scores"</span>) <span class="sc">+</span></span>
-<span id="cb132-937"><a href="#cb132-937" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span>
-<span id="cb132-938"><a href="#cb132-938" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-939"><a href="#cb132-939" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb132-940"><a href="#cb132-940" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-941"><a href="#cb132-941" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-942"><a href="#cb132-942" aria-hidden="true" tabindex="-1"></a><span class="fu">## Plot Scores/ranks</span></span>
-<span id="cb132-943"><a href="#cb132-943" aria-hidden="true" tabindex="-1"></a><span class="fu">### West Brook 0</span></span>
-<span id="cb132-946"><a href="#cb132-946" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb132-947"><a href="#cb132-947" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotECDFWB0</span></span>
-<span id="cb132-948"><a href="#cb132-948" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-949"><a href="#cb132-949" aria-hidden="true" tabindex="-1"></a>kappas <span class="ot">&lt;-</span> <span class="fu">estimate_kappa_params</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
-<span id="cb132-950"><a href="#cb132-950" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] -0.7751903  3.1289847  0.7443434  0.8989118</span></span>
-<span id="cb132-951"><a href="#cb132-951" aria-hidden="true" tabindex="-1"></a>flow_kappa <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb132-952"><a href="#cb132-952" aria-hidden="true" tabindex="-1"></a>  <span class="at">flow =</span> dWB0<span class="sc">$</span>flow_cfs_log10,</span>
-<span id="cb132-953"><a href="#cb132-953" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">pkappa4</span>(</span>
-<span id="cb132-954"><a href="#cb132-954" aria-hidden="true" tabindex="-1"></a>    dWB0<span class="sc">$</span>flow_cfs_log10,</span>
-<span id="cb132-955"><a href="#cb132-955" aria-hidden="true" tabindex="-1"></a>    kappas[<span class="dv">3</span>],</span>
-<span id="cb132-956"><a href="#cb132-956" aria-hidden="true" tabindex="-1"></a>    kappas[<span class="dv">4</span>],</span>
-<span id="cb132-957"><a href="#cb132-957" aria-hidden="true" tabindex="-1"></a>    kappas[<span class="dv">2</span>],</span>
-<span id="cb132-958"><a href="#cb132-958" aria-hidden="true" tabindex="-1"></a>    kappas[<span class="dv">1</span>]</span>
-<span id="cb132-959"><a href="#cb132-959" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb132-960"><a href="#cb132-960" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb132-961"><a href="#cb132-961" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-962"><a href="#cb132-962" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-963"><a href="#cb132-963" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(flow_kappa, <span class="fu">aes</span>(flow)) <span class="sc">+</span></span>
-<span id="cb132-964"><a href="#cb132-964" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
-<span id="cb132-965"><a href="#cb132-965" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(x), <span class="at">color =</span> <span class="st">"orange"</span>)</span>
+<span id="cb132-882"><a href="#cb132-882" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb132-883"><a href="#cb132-883" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-884"><a href="#cb132-884" aria-hidden="true" tabindex="-1"></a><span class="fu">### Graph area differences</span></span>
+<span id="cb132-885"><a href="#cb132-885" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Linear interpolation between flow points</span></span>
+<span id="cb132-888"><a href="#cb132-888" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb132-889"><a href="#cb132-889" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: graphAreaDiff_interp</span></span>
+<span id="cb132-890"><a href="#cb132-890" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb132-891"><a href="#cb132-891" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-892"><a href="#cb132-892" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_interp, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
+<span id="cb132-893"><a href="#cb132-893" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb132-894"><a href="#cb132-894" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
+<span id="cb132-895"><a href="#cb132-895" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb132-896"><a href="#cb132-896" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_smooth(method = "lm", </span></span>
+<span id="cb132-897"><a href="#cb132-897" aria-hidden="true" tabindex="-1"></a>  <span class="co">#            formula = y ~ x + I(x^2),  </span></span>
+<span id="cb132-898"><a href="#cb132-898" aria-hidden="true" tabindex="-1"></a>  <span class="co">#            se = FALSE) +</span></span>
+<span id="cb132-899"><a href="#cb132-899" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_y_log10() +</span></span>
+<span id="cb132-900"><a href="#cb132-900" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb132-901"><a href="#cb132-901" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span>
+<span id="cb132-902"><a href="#cb132-902" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-903"><a href="#cb132-903" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb132-904"><a href="#cb132-904" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-905"><a href="#cb132-905" aria-hidden="true" tabindex="-1"></a><span class="fu">#### GAM fit across flow points</span></span>
+<span id="cb132-908"><a href="#cb132-908" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb132-909"><a href="#cb132-909" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: graphAreaDiff_gam</span></span>
+<span id="cb132-910"><a href="#cb132-910" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb132-911"><a href="#cb132-911" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-912"><a href="#cb132-912" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_gam, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
+<span id="cb132-913"><a href="#cb132-913" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb132-914"><a href="#cb132-914" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
+<span id="cb132-915"><a href="#cb132-915" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb132-916"><a href="#cb132-916" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb132-917"><a href="#cb132-917" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span>
+<span id="cb132-918"><a href="#cb132-918" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-919"><a href="#cb132-919" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb132-920"><a href="#cb132-920" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-921"><a href="#cb132-921" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-924"><a href="#cb132-924" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb132-925"><a href="#cb132-925" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
+<span id="cb132-926"><a href="#cb132-926" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs)</span>
+<span id="cb132-927"><a href="#cb132-927" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-928"><a href="#cb132-928" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-929"><a href="#cb132-929" aria-hidden="true" tabindex="-1"></a>relFlow_WB0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb132-930"><a href="#cb132-930" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> dWB0<span class="sc">$</span>rank_pred, </span>
+<span id="cb132-931"><a href="#cb132-931" aria-hidden="true" tabindex="-1"></a>  <span class="at">ecdf =</span> <span class="fu">getECDF</span>(dWB0<span class="sc">$</span>rank_pred)</span>
+<span id="cb132-932"><a href="#cb132-932" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb132-933"><a href="#cb132-933" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb132-934"><a href="#cb132-934" aria-hidden="true" tabindex="-1"></a>    <span class="at">value0_100 =</span> (value <span class="sc">-</span> <span class="fu">min</span>(value)) <span class="sc">/</span> (<span class="fu">max</span>(value) <span class="sc">-</span> <span class="fu">min</span>(value))</span>
+<span id="cb132-935"><a href="#cb132-935" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb132-936"><a href="#cb132-936" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-937"><a href="#cb132-937" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-938"><a href="#cb132-938" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(relFlow_WB0, <span class="fu">aes</span>(value0_100, ecdf)) <span class="sc">+</span></span>
+<span id="cb132-939"><a href="#cb132-939" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb132-940"><a href="#cb132-940" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Relative flow from FPE scores"</span>) <span class="sc">+</span></span>
+<span id="cb132-941"><a href="#cb132-941" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_publication</span>()</span>
+<span id="cb132-942"><a href="#cb132-942" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-943"><a href="#cb132-943" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb132-944"><a href="#cb132-944" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-945"><a href="#cb132-945" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-946"><a href="#cb132-946" aria-hidden="true" tabindex="-1"></a><span class="fu">## Plot Scores/ranks</span></span>
+<span id="cb132-947"><a href="#cb132-947" aria-hidden="true" tabindex="-1"></a><span class="fu">### West Brook 0</span></span>
+<span id="cb132-950"><a href="#cb132-950" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb132-951"><a href="#cb132-951" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plotECDFWB0</span></span>
+<span id="cb132-952"><a href="#cb132-952" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-953"><a href="#cb132-953" aria-hidden="true" tabindex="-1"></a>kappas <span class="ot">&lt;-</span> <span class="fu">estimate_kappa_params</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
+<span id="cb132-954"><a href="#cb132-954" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] -0.7751903  3.1289847  0.7443434  0.8989118</span></span>
+<span id="cb132-955"><a href="#cb132-955" aria-hidden="true" tabindex="-1"></a>flow_kappa <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb132-956"><a href="#cb132-956" aria-hidden="true" tabindex="-1"></a>  <span class="at">flow =</span> dWB0<span class="sc">$</span>flow_cfs_log10,</span>
+<span id="cb132-957"><a href="#cb132-957" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">pkappa4</span>(</span>
+<span id="cb132-958"><a href="#cb132-958" aria-hidden="true" tabindex="-1"></a>    dWB0<span class="sc">$</span>flow_cfs_log10,</span>
+<span id="cb132-959"><a href="#cb132-959" aria-hidden="true" tabindex="-1"></a>    kappas[<span class="dv">3</span>],</span>
+<span id="cb132-960"><a href="#cb132-960" aria-hidden="true" tabindex="-1"></a>    kappas[<span class="dv">4</span>],</span>
+<span id="cb132-961"><a href="#cb132-961" aria-hidden="true" tabindex="-1"></a>    kappas[<span class="dv">2</span>],</span>
+<span id="cb132-962"><a href="#cb132-962" aria-hidden="true" tabindex="-1"></a>    kappas[<span class="dv">1</span>]</span>
+<span id="cb132-963"><a href="#cb132-963" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb132-964"><a href="#cb132-964" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb132-965"><a href="#cb132-965" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-966"><a href="#cb132-966" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-967"><a href="#cb132-967" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
-<span id="cb132-968"><a href="#cb132-968" aria-hidden="true" tabindex="-1"></a><span class="co">#curve(dkappa4(dWB0$flow_cfs_log10, kappas[3], kappas[4],kappas[2],kappas[1]), add=TRUE, col='red4', lwd=2)</span></span>
-<span id="cb132-969"><a href="#cb132-969" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-967"><a href="#cb132-967" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(flow_kappa, <span class="fu">aes</span>(flow)) <span class="sc">+</span></span>
+<span id="cb132-968"><a href="#cb132-968" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
+<span id="cb132-969"><a href="#cb132-969" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(x), <span class="at">color =</span> <span class="st">"orange"</span>)</span>
 <span id="cb132-970"><a href="#cb132-970" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-971"><a href="#cb132-971" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-972"><a href="#cb132-972" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-973"><a href="#cb132-973" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span><span class="fu">rkappa4</span>(<span class="dv">1000</span>,<span class="dv">1</span>,.<span class="dv">2</span>,<span class="dv">12</span>,<span class="dv">10</span>) </span>
-<span id="cb132-974"><a href="#cb132-974" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(x,<span class="at">freq=</span><span class="cn">FALSE</span>,<span class="at">col=</span><span class="st">'gray'</span>,<span class="at">border=</span><span class="st">'white'</span>) </span>
-<span id="cb132-975"><a href="#cb132-975" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dkappa4</span>(x,.<span class="dv">1</span>,.<span class="dv">2</span>,<span class="dv">12</span>,<span class="dv">110</span>),<span class="at">add=</span><span class="cn">TRUE</span>,<span class="at">col=</span><span class="st">'red4'</span>,<span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb132-971"><a href="#cb132-971" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
+<span id="cb132-972"><a href="#cb132-972" aria-hidden="true" tabindex="-1"></a><span class="co">#curve(dkappa4(dWB0$flow_cfs_log10, kappas[3], kappas[4],kappas[2],kappas[1]), add=TRUE, col='red4', lwd=2)</span></span>
+<span id="cb132-973"><a href="#cb132-973" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-974"><a href="#cb132-974" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-975"><a href="#cb132-975" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-976"><a href="#cb132-976" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-977"><a href="#cb132-977" aria-hidden="true" tabindex="-1"></a><span class="co">#https://rdrr.io/cran/lmomco/man/parkap.html</span></span>
-<span id="cb132-978"><a href="#cb132-978" aria-hidden="true" tabindex="-1"></a>lmr <span class="ot">&lt;-</span> <span class="fu">lmoms</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
-<span id="cb132-979"><a href="#cb132-979" aria-hidden="true" tabindex="-1"></a><span class="fu">parkap</span>(lmr)</span>
+<span id="cb132-977"><a href="#cb132-977" aria-hidden="true" tabindex="-1"></a>x<span class="ot">&lt;-</span><span class="fu">rkappa4</span>(<span class="dv">1000</span>,<span class="dv">1</span>,.<span class="dv">2</span>,<span class="dv">12</span>,<span class="dv">10</span>) </span>
+<span id="cb132-978"><a href="#cb132-978" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(x,<span class="at">freq=</span><span class="cn">FALSE</span>,<span class="at">col=</span><span class="st">'gray'</span>,<span class="at">border=</span><span class="st">'white'</span>) </span>
+<span id="cb132-979"><a href="#cb132-979" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dkappa4</span>(x,.<span class="dv">1</span>,.<span class="dv">2</span>,<span class="dv">12</span>,<span class="dv">110</span>),<span class="at">add=</span><span class="cn">TRUE</span>,<span class="at">col=</span><span class="st">'red4'</span>,<span class="at">lwd=</span><span class="dv">2</span>)</span>
 <span id="cb132-980"><a href="#cb132-980" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-981"><a href="#cb132-981" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-982"><a href="#cb132-982" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-983"><a href="#cb132-983" aria-hidden="true" tabindex="-1"></a><span class="co">#ojs_define(dWB0_OJS = transpose(dWB0))</span></span>
+<span id="cb132-981"><a href="#cb132-981" aria-hidden="true" tabindex="-1"></a><span class="co">#https://rdrr.io/cran/lmomco/man/parkap.html</span></span>
+<span id="cb132-982"><a href="#cb132-982" aria-hidden="true" tabindex="-1"></a>lmr <span class="ot">&lt;-</span> <span class="fu">lmoms</span>(dWB0<span class="sc">$</span>flow_cfs_log10)</span>
+<span id="cb132-983"><a href="#cb132-983" aria-hidden="true" tabindex="-1"></a><span class="fu">parkap</span>(lmr)</span>
 <span id="cb132-984"><a href="#cb132-984" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-985"><a href="#cb132-985" aria-hidden="true" tabindex="-1"></a><span class="co">#  facet_wrap(~data_group)</span></span>
-<span id="cb132-986"><a href="#cb132-986" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb132-985"><a href="#cb132-985" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-986"><a href="#cb132-986" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-987"><a href="#cb132-987" aria-hidden="true" tabindex="-1"></a><span class="co">#ojs_define(dWB0_OJS = transpose(dWB0))</span></span>
+<span id="cb132-988"><a href="#cb132-988" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-989"><a href="#cb132-989" aria-hidden="true" tabindex="-1"></a><span class="co">#  facet_wrap(~data_group)</span></span>
+<span id="cb132-990"><a href="#cb132-990" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
