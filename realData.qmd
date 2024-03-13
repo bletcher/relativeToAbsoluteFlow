@@ -722,7 +722,7 @@ plotSubSample(dABs, 3)
 ```{r}
 #| label: simDiffs
 
-# repeating here for Quarto
+# repeating functions here for Quarto
  get_preds_gam_sim <- function(dIn, num_pred_points = 100) {
   mod <- loess(flow_cfs_log10_scaled_ecdf ~ flow_cfs_log10_scaled, data = dIn)
   
@@ -753,8 +753,7 @@ get_quantile_value_sim <- function(d, quant) {
 
 
 
-n_rep <- 25
-#sim_diffs_out <- data.frame(station_name=NA, anchor_tf=NA, n = NA, rep = NA, area_diff = NA)
+n_rep <- 100
 sim_diffs_out <- data.frame()
 
 
@@ -792,7 +791,7 @@ for(s in unique(d2$station_name)) {
           data.frame(station_name=s, anchor_tf=anchor_tf, n = n, rep = rep, area_diff_interp = area_diff_interp, area_diff_gam = area_diff_gam)
         )
         
-        print(c(s,anchor_tf,n,rep))
+        #print(c(s,anchor_tf,n,rep))
       }
     }
   }
@@ -805,6 +804,7 @@ for(s in unique(d2$station_name)) {
 #### Linear interpolation between flow points
 ```{r}
 #| label: graphAreaDiff_interp
+dummy <- 1
 
 ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
   geom_point() +
@@ -819,6 +819,7 @@ ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
 #### GAM fit across flow points
 ```{r}
 #| label: graphAreaDiff_gam
+dummy <- 1
 
 ggplot(sim_diffs_out, aes(n, area_diff_gam, color = anchor_tf)) +
   geom_point() +
