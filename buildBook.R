@@ -10,4 +10,3 @@ library(getWBData)
 
 quarto::quarto_render(output_format = "html")
 
-do area diffs for all curves
