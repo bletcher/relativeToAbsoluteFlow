@@ -809,7 +809,7 @@ for(s in unique(d2$station_name)) {
 dummy <- 1
 
 ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
-  geom_jitter(width = 0.5,  size = 0.5) +
+  geom_jitter(width = 0.5,  size = 0.2) +
   geom_smooth(method = "gam", 
               formula = y ~ s(x, bs = "cs", k = 3), se = FALSE) +
   #geom_smooth(method = "lm", 
@@ -827,7 +827,7 @@ ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
 dummy <- 1
 
 ggplot(sim_diffs_out, aes(n, area_diff_gam, color = anchor_tf)) +
-  geom_jitter(width = 0.5, size = 0.5) +
+  geom_jitter(width = 0.5, size = 0.2) +
   geom_smooth(method = "gam", 
               formula = y ~ s(x, bs = "cs", k = 3), se = FALSE) +
   facet_wrap(~station_name, scales = "free") +
