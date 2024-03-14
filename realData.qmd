@@ -806,10 +806,10 @@ for(s in unique(d2$station_name)) {
 #### Linear interpolation between flow points
 ```{r}
 #| label: graphAreaDiff_interp
-dummy <- 2
+dummy <- 1
 
 ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
-  geom_jitter(width = 0.5) +
+  geom_jitter(width = 0.5,  size = 0.5) +
   geom_smooth(method = "gam", 
               formula = y ~ s(x, bs = "cs", k = 3), se = FALSE) +
   #geom_smooth(method = "lm", 
@@ -824,10 +824,10 @@ ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
 #### GAM fit across flow points
 ```{r}
 #| label: graphAreaDiff_gam
-dummy <- 2
+dummy <- 1
 
 ggplot(sim_diffs_out, aes(n, area_diff_gam, color = anchor_tf)) +
-  geom_jitter(width = 0.5) +
+  geom_jitter(width = 0.5, size = 0.5) +
   geom_smooth(method = "gam", 
               formula = y ~ s(x, bs = "cs", k = 3), se = FALSE) +
   facet_wrap(~station_name, scales = "free") +

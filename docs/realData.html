@@ -1921,10 +1921,10 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_interp, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>,  <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
 <span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
 <span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_smooth(method = "lm", </span></span>
@@ -1948,10 +1948,10 @@ $figs_smoothed_data_with_anchors</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_gam, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
-<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
 <span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
 <span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
@@ -3530,10 +3530,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-885"><a href="#cb132-885" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Linear interpolation between flow points</span></span>
 <span id="cb132-888"><a href="#cb132-888" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb132-889"><a href="#cb132-889" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: graphAreaDiff_interp</span></span>
-<span id="cb132-890"><a href="#cb132-890" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb132-890"><a href="#cb132-890" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb132-891"><a href="#cb132-891" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-892"><a href="#cb132-892" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_interp, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
-<span id="cb132-893"><a href="#cb132-893" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb132-893"><a href="#cb132-893" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>,  <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb132-894"><a href="#cb132-894" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
 <span id="cb132-895"><a href="#cb132-895" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
 <span id="cb132-896"><a href="#cb132-896" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_smooth(method = "lm", </span></span>
@@ -3548,10 +3548,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-905"><a href="#cb132-905" aria-hidden="true" tabindex="-1"></a><span class="fu">#### GAM fit across flow points</span></span>
 <span id="cb132-908"><a href="#cb132-908" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb132-909"><a href="#cb132-909" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: graphAreaDiff_gam</span></span>
-<span id="cb132-910"><a href="#cb132-910" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb132-910"><a href="#cb132-910" aria-hidden="true" tabindex="-1"></a>dummy <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb132-911"><a href="#cb132-911" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-912"><a href="#cb132-912" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_diffs_out, <span class="fu">aes</span>(n, area_diff_gam, <span class="at">color =</span> anchor_tf)) <span class="sc">+</span></span>
-<span id="cb132-913"><a href="#cb132-913" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb132-913"><a href="#cb132-913" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb132-914"><a href="#cb132-914" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, </span>
 <span id="cb132-915"><a href="#cb132-915" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>, <span class="at">k =</span> <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
 <span id="cb132-916"><a href="#cb132-916" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
