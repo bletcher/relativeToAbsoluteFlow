@@ -802,11 +802,18 @@ for(s in unique(d2$station_name)) {
 
 ```
 
+```{r}
+#| label: filter_sim
+
+sim_diffs_out <- sim_diffs_out |> filter(area_diff_gam < 5)
+```
+
+
 ### Graph area differences
 #### Linear interpolation between flow points
 ```{r}
 #| label: graphAreaDiff_interp
-dummy <- 1
+dummy <- 2
 
 ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
   geom_jitter(width = 0.5,  size = 0.2) +
@@ -824,7 +831,7 @@ ggplot(sim_diffs_out, aes(n, area_diff_interp, color = anchor_tf)) +
 #### GAM fit across flow points
 ```{r}
 #| label: graphAreaDiff_gam
-dummy <- 1
+dummy <- 2
 
 ggplot(sim_diffs_out, aes(n, area_diff_gam, color = anchor_tf)) +
   geom_jitter(width = 0.5, size = 0.2) +
