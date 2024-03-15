@@ -83,6 +83,7 @@ dG <- d |>
     
     #flow_cfs_log10_scaled_kappa = standardize_data_kappa(flow_cfs_log10), 
     #flow_cfs_log10_scaled_kappa_ecdf = getECDF(flow_cfs_log10_scaled_kappa),
+    score_ecdf = getECDF(score),
     
     score_scaled = scale(score),
     score_scaled_ecdf = getECDF(score_scaled),
@@ -146,6 +147,37 @@ ggplot(d |> filter(!is.na(flow_cfs_log10_scaled)), aes(flow_cfs_log10_scaled, fl
 
 
 ```
+
+### Plot raw score and flow ECDF
+```{r}
+#| label: plot_raw_score_flow_ecdf
+
+ ggplot(d, aes(score, score_ecdf)) + 
+    geom_line(size = 1.5) +
+    geom_line( aes(flow_cfs_log10, flow_cfs_log10_ecdf), color = "blue", size = 1.5) +
+    labs(x = "Black = scaled observed score, Blue = scaled observed flow", y = "Empirical cumulative dist") +
+    #xlim(c(-3.5,3.5)) +
+    facet_wrap(~station_name, scales = 'free') +
+    theme_publication() 
+```
+
+
+### Plot scaled score and flow ECDF
+```{r}
+#| label: plot_score_flow_ecdf
+
+ ggplot(d, aes(score_scaled, score_scaled_ecdf)) + 
+    geom_line(size = 1.5) +
+    geom_line( aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "blue", size = 1.5) +
+    labs(x = "Black = scaled observed score, Blue = scaled observed flow", y = "Empirical cumulative dist") +
+    xlim(c(-3.5,3.5)) +
+    facet_wrap(~station_name) +
+    theme_publication() 
+
+
+```
+
+
 
 ## Filter sites
 Pick sites that seem to have enough data to get predictions.  
@@ -844,6 +876,8 @@ ggplot(sim_diffs_out, aes(n, area_diff_gam, color = anchor_tf)) +
 
 
 ```{r}
+#| label: histos
+#| 
 hist(dWB0$flow_cfs_log10)
 hist(dWB0$flow_cfs)
 
