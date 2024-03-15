@@ -155,14 +155,14 @@ ggplot(d |> filter(!is.na(flow_cfs_log10_scaled)), aes(flow_cfs_log10_scaled, fl
  ggplot(d, aes(score, score_ecdf)) + 
     geom_line(size = 1.5) +
     geom_line( aes(flow_cfs_log10, flow_cfs_log10_ecdf), color = "blue", size = 1.5) +
-    labs(x = "Black = scaled observed score, Blue = scaled observed flow", y = "Empirical cumulative dist") +
+    labs(x = "Black = observed score, Blue = observed log10 flow", y = "Empirical cumulative dist") +
     #xlim(c(-3.5,3.5)) +
     facet_wrap(~station_name, scales = 'free') +
     theme_publication() 
 ```
 
 
-### Plot scaled score and flow ECDF
+### Plot **scaled** score and flow ECDF
 ```{r}
 #| label: plot_score_flow_ecdf
 
@@ -170,7 +170,7 @@ ggplot(d |> filter(!is.na(flow_cfs_log10_scaled)), aes(flow_cfs_log10_scaled, fl
     geom_line(size = 1.5) +
     geom_line( aes(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), color = "blue", size = 1.5) +
     labs(x = "Black = scaled observed score, Blue = scaled observed flow", y = "Empirical cumulative dist") +
-    xlim(c(-3.5,3.5)) +
+    xlim(c(-2.5,2.5)) +
     facet_wrap(~station_name) +
     theme_publication() 
 

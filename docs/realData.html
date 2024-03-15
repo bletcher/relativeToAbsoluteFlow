@@ -184,7 +184,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#plot-absolute-flow-ecdf" id="toc-plot-absolute-flow-ecdf" class="nav-link" data-scroll-target="#plot-absolute-flow-ecdf"><span class="header-section-number">2.2.1</span> Plot absolute flow ECDF</a></li>
   <li><a href="#plot-raw-score-and-flow-ecdf" id="toc-plot-raw-score-and-flow-ecdf" class="nav-link" data-scroll-target="#plot-raw-score-and-flow-ecdf"><span class="header-section-number">2.2.2</span> Plot raw score and flow ECDF</a></li>
-  <li><a href="#plot-scaled-score-and-flow-ecdf" id="toc-plot-scaled-score-and-flow-ecdf" class="nav-link" data-scroll-target="#plot-scaled-score-and-flow-ecdf"><span class="header-section-number">2.2.3</span> Plot scaled score and flow ECDF</a></li>
+  <li><a href="#plot-scaled-score-and-flow-ecdf" id="toc-plot-scaled-score-and-flow-ecdf" class="nav-link" data-scroll-target="#plot-scaled-score-and-flow-ecdf"><span class="header-section-number">2.2.3</span> Plot <strong>scaled</strong> score and flow ECDF</a></li>
   </ul></li>
   <li><a href="#filter-sites" id="toc-filter-sites" class="nav-link" data-scroll-target="#filter-sites"><span class="header-section-number">2.3</span> Filter sites</a>
   <ul class="collapse">
@@ -398,7 +398,7 @@ Manipulation includes scaling (z-score) the <strong>absolute flow</strong> (<cod
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(d, <span class="fu">aes</span>(score, score_ecdf)) <span class="sc">+</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>( <span class="fu">aes</span>(flow_cfs_log10, flow_cfs_log10_ecdf), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = scaled observed score, Blue = scaled observed flow"</span>, <span class="at">y =</span> <span class="st">"Empirical cumulative dist"</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = observed score, Blue = observed log10 flow"</span>, <span class="at">y =</span> <span class="st">"Empirical cumulative dist"</span>) <span class="sc">+</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#xlim(c(-3.5,3.5)) +</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">'free'</span>) <span class="sc">+</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -413,7 +413,7 @@ Manipulation includes scaling (z-score) the <strong>absolute flow</strong> (<cod
 </div>
 </section>
 <section id="plot-scaled-score-and-flow-ecdf" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="plot-scaled-score-and-flow-ecdf"><span class="header-section-number">2.2.3</span> Plot scaled score and flow ECDF</h3>
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="plot-scaled-score-and-flow-ecdf"><span class="header-section-number">2.2.3</span> Plot <strong>scaled</strong> score and flow ECDF</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -421,7 +421,7 @@ Manipulation includes scaling (z-score) the <strong>absolute flow</strong> (<cod
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>( <span class="fu">aes</span>(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = scaled observed score, Blue = scaled observed flow"</span>, <span class="at">y =</span> <span class="st">"Empirical cumulative dist"</span>) <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">3.5</span>,<span class="fl">3.5</span>)) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.5</span>,<span class="fl">2.5</span>)) <span class="sc">+</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name) <span class="sc">+</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -2932,14 +2932,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb135-164"><a href="#cb135-164" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(d, <span class="fu">aes</span>(score, score_ecdf)) <span class="sc">+</span> </span>
 <span id="cb135-165"><a href="#cb135-165" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
 <span id="cb135-166"><a href="#cb135-166" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>( <span class="fu">aes</span>(flow_cfs_log10, flow_cfs_log10_ecdf), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb135-167"><a href="#cb135-167" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = scaled observed score, Blue = scaled observed flow"</span>, <span class="at">y =</span> <span class="st">"Empirical cumulative dist"</span>) <span class="sc">+</span></span>
+<span id="cb135-167"><a href="#cb135-167" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = observed score, Blue = observed log10 flow"</span>, <span class="at">y =</span> <span class="st">"Empirical cumulative dist"</span>) <span class="sc">+</span></span>
 <span id="cb135-168"><a href="#cb135-168" aria-hidden="true" tabindex="-1"></a>    <span class="co">#xlim(c(-3.5,3.5)) +</span></span>
 <span id="cb135-169"><a href="#cb135-169" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name, <span class="at">scales =</span> <span class="st">'free'</span>) <span class="sc">+</span></span>
 <span id="cb135-170"><a href="#cb135-170" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() </span>
 <span id="cb135-171"><a href="#cb135-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb135-172"><a href="#cb135-172" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb135-173"><a href="#cb135-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb135-174"><a href="#cb135-174" aria-hidden="true" tabindex="-1"></a><span class="fu">### Plot scaled score and flow ECDF</span></span>
+<span id="cb135-174"><a href="#cb135-174" aria-hidden="true" tabindex="-1"></a><span class="fu">### Plot **scaled** score and flow ECDF</span></span>
 <span id="cb135-177"><a href="#cb135-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb135-178"><a href="#cb135-178" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plot_score_flow_ecdf</span></span>
 <span id="cb135-179"><a href="#cb135-179" aria-hidden="true" tabindex="-1"></a></span>
@@ -2947,7 +2947,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb135-181"><a href="#cb135-181" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
 <span id="cb135-182"><a href="#cb135-182" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>( <span class="fu">aes</span>(flow_cfs_log10_scaled, flow_cfs_log10_scaled_ecdf), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
 <span id="cb135-183"><a href="#cb135-183" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Black = scaled observed score, Blue = scaled observed flow"</span>, <span class="at">y =</span> <span class="st">"Empirical cumulative dist"</span>) <span class="sc">+</span></span>
-<span id="cb135-184"><a href="#cb135-184" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">3.5</span>,<span class="fl">3.5</span>)) <span class="sc">+</span></span>
+<span id="cb135-184"><a href="#cb135-184" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.5</span>,<span class="fl">2.5</span>)) <span class="sc">+</span></span>
 <span id="cb135-185"><a href="#cb135-185" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>station_name) <span class="sc">+</span></span>
 <span id="cb135-186"><a href="#cb135-186" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_publication</span>() </span>
 <span id="cb135-187"><a href="#cb135-187" aria-hidden="true" tabindex="-1"></a></span>
